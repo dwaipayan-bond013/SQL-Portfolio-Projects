@@ -1,0 +1,26 @@
+Restaurant_ID,Name,Cuisine,Location,Rating,Contact
+REST001,Sakura Sushi,Japanese,751 3rd Blvd,4.3,+91-9626773134
+REST002,Lemongrass Kitchen,Thai,40 2nd Ave,3.1,+91-9457927711
+REST003,Red Lantern,Chinese,919 5th Street,4.8,+91-9966575912
+REST004,Lemongrass Kitchen,Thai,505 Main St,4.2,+91-8400239511
+REST005,Thai Orchid,Thai,322 Park Lane,4.2,+91-9730734493
+REST006,Bangkok Bites,Thai,730 Main St,3.3,+91-8737317225
+REST007,Trattoria Roma,Italian,130 2nd Ave,5,+91-8894169608
+REST008,Wok This Way,Chinese,713 2nd Ave,3.2,+91-7260751254
+REST009,Curry House,Indian,60 3rd Blvd,3.5,+91-7911252008
+REST010,Tokyo Table,Japanese,227 Main St,4.4,+91-7627920970
+REST011,Ninja Ramen,Japanese,903 Maple Rd,3.2,+91-9162170857
+REST012,Grill & Chill,American,793 5th Street,4.9,+91-9794834821
+REST013,Burrito Bros,Mexican,574 Park Lane,4.2,+91-8980821418
+REST014,Burger Barn,American,151 5th Street,4.2,+91-7971579449
+REST015,Bella Cucina,Italian,285 Park Lane,3.8,+91-9046106523
+REST016,Lemongrass Kitchen,Thai,980 Park Lane,3.5,+91-7826526955
+REST017,Burrito Bros,Mexican,795 Main St,4.6,+91-9346239758
+REST018,Luigi's Kitchen,Italian,242 5th Street,3.9,+91-8965894098
+REST019,Tandoori Tales,Indian,208 Main St,4.8,+91-8581396056
+REST020,Sushi Zen,Japanese,210 3rd Blvd,3.7,+91-7686758242
+REST021,Sushi Zen,Japanese,387 Park Lane,3.7,+91-8148866365
+REST022,Thai Orchid,Thai,737 Oak St,4.8,+91-7280107379
+REST023,El Rancho,Mexican,372 Park Lane,4.4,+91-8116008425
+REST024,Masala Magic,Indian,494 3rd Blvd,4,+91-8889234036
+REST025,Red Lantern,Chinese,619 Park Lane,4.3,+91-9961656862
