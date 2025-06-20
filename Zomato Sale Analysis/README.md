@@ -1,5 +1,7 @@
 # 🍽️ Zomato Sales Analysis SQL Project
 
+![alt text](zomato-sc-1.jpg)
+
 ## 📌 Overview
 This SQL project explores the sales, delivery, and customer behavior data of  Zomato. It includes 20 advanced SQL queries to uncover performance drivers, customer segmentation, item trends, and operational insights.
 
@@ -15,7 +17,11 @@ This SQL project explores the sales, delivery, and customer behavior data of  Zo
 
 ---
 
-## Entity Relationship Diagram
+## Entity Relationship Diagram (ERD)
+The ERD for the analysis is present as follows
+
+![alt text](ERD.png)
+
 
 
 ## 📊 Analytical Insights & Recommendations
