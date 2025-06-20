@@ -148,34 +148,159 @@ ORDER BY total_failed_orders DESC;
 
 ![](Top10revenuegeneratingrestaurants.PNG)
 
+```sql
+WITH top_restaurants AS (
+  SELECT Name, Location, SUM(Total_Amount) AS total_revenue, 
+         DENSE_RANK() OVER (ORDER BY SUM(Total_Amount) DESC) AS rank 
+  FROM Restaurants r 
+  LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+  GROUP BY Name, Location
+)
+SELECT Name, Location, total_revenue FROM top_restaurants WHERE rank <= 10;
+```
+
 💼 Business Insight: Strategy for Top 10 High-Revenue Restaurants
--  Feature these partners more prominently in app feeds.
--  Highlight them in social media campaigns or city-based food trend articles.
+-  Feature these partners more prominently in app feeds
+-  Highlight them in social media campaigns or city-based food trend articles
+-  Launch co-branded campaigns, discount weeks, or food festivals
 
 ### 7. 🍟 Most Popular Items per Restaurant
-- Single most ordered dish per restaurant.
-- 🍽️ Helps with bundle creation and ad copywriting.
+
+Single most ordered dish per restaurant.
+  
+![](Resatuarantswiththeirpopularitems.PNG)
+
+```sql
+WITH most_popular_items AS (
+  SELECT Name, Location, Items, COUNT(Items) AS number_of_orders,
+         DENSE_RANK() OVER (PARTITION BY Name, Location ORDER BY COUNT(Items) DESC) AS rank
+  FROM Restaurants r 
+  LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+  GROUP BY Name, Location, Items
+)
+SELECT Name, Location, Items,number_of_orders FROM most_popular_items WHERE rank = 1;;
+```
+
+📌 Strategic Uses of Most Popular Items Per Restaurant Data:
+
+- Highlight these items on Zomato's app and website with badges like "Most Popular" and run targeted promotions or discounts on these items to increase conversion
+- Offer incentives for consistently popular dishes with good delivery ratings
+- Understand dish popularity by area—tailor Zomato campaigns based on food preferences in each city or neighborhood
+- Run localized ads featuring these popular dishes to increase order frequency from those restaurants
 
 ### 8. 📈 Customer Order Trend (Monthly)
-- Monthly activity tracking.
-- 📅 Run re-engagement or reactivation campaigns based on lulls.
 
-### 9. 🔁 Restaurant Cancellations MoM
-- Trend shows increase/decrease in non-delivered orders.
-- 📊 Pinpoint operational issues.
+- Monthly activity tracking.
+  
+![](CustomerMonthlyorderanalysis.PNG)
+
+✅ Action Plan: Customers Order Analysis Per Month
+
+- Spot trends in monthly order volumes per customer and boost sales during low-order months using personalized discounts or cashback for inactive users
+- Detect customers with declining monthly activity and re-engage them through loyalty programs or reminders
+- Identify customers who suddenly stop ordering in a given month and initiate retention campaigns or surveys
+- Allocate marketing budget and timing based on user activity trends — more during high-engagement months, creative campaigns in low ones
+  
+### 9. 🔁 MoM Cancellation Trend
+
+ Trend showing increase/decrease in non-delivered orders
+
+ ![](MoMCancellationTrend.PNG)
+
+ ```sql
+SELECT Name, Location, MONTH(Order_Date) AS month, COUNT(DISTINCT Order_ID) AS total_failed_orders,
+       LAG(COUNT(DISTINCT Order_ID), 1) OVER (PARTITION BY Name ORDER BY MONTH(Order_Date)) AS prev_month_order,
+       CASE 
+         WHEN COUNT(DISTINCT Order_ID) > LAG(COUNT(DISTINCT Order_ID), 1) OVER (PARTITION BY Name ORDER BY MONTH(Order_Date)) THEN 'Increase'
+         WHEN COUNT(DISTINCT Order_ID) < LAG(COUNT(DISTINCT Order_ID), 1) OVER (PARTITION BY Name ORDER BY MONTH(Order_Date)) THEN 'Decrease'
+         ELSE 'No Change' 
+       END AS cancellation
+FROM Restaurants r 
+LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+WHERE Status = 'Not Delivered' 
+GROUP BY Name, Location, MONTH(Order_Date) 
+ORDER BY Name, month;
+```
+
+✅ Action Plan: MoM Cancellation Analysis of Restaurants
+
+- Detect restaurants with consistently increasing cancellation trends by setting thresholds (e.g., 10% MoM increase) to trigger intervention
+- Determine reasons for order cancellations: delivery delays, out-of-stock items, quality issues, etc
+- For repeat offenders, introduce soft penalties like reduced visibility in search results or customer filters
+
 
 ### 10. 🚴‍♂️ Average Rider Delivery Time
-- Riders' average time ranged from **~25–45 mins**.
-- 🏅 Reward fast riders or provide training for slower ones.
+
+![](AvgDeliveryTime.PNG)
+
+ Riders' average time ranged from **~29–123 mins**.
+
+```sql
+SELECT r.Rider_ID, Name, AVG(ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME)))) AS avg_delivery_time 
+FROM Riders r 
+JOIN Deliveries d ON r.Rider_ID = d.Rider_ID 
+GROUP BY r.Rider_ID, Name 
+ORDER BY avg_delivery_time;
+```
 
 ### 11. 📉 MoM Order Growth (Restaurant-Level)
-- Calculated delivery growth rates with `LAG()`.
-- 📈 Used to recommend promotion boosts for underperformers.
+
+![](Monthwiserestaurantgrowthratio.PNG)
+
+```sql
+
+SELECT Name, Location, MONTH(Order_Date) AS month, COUNT(DISTINCT Order_ID) AS total_delivered_orders,
+       LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name ORDER BY MONTH(Order_Date)) AS prev_month_order,
+       CASE 
+         WHEN COUNT(DISTINCT Order_ID) > LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name ORDER BY MONTH(Order_Date)) THEN 'Increase'
+         WHEN COUNT(DISTINCT Order_ID) < LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name ORDER BY MONTH(Order_Date)) THEN 'Decrease'
+         ELSE 'No change' 
+       END AS Succesful_Delivery,
+(COUNT(DISTINCT Order_ID) - LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name,Location ORDER BY MONTH(Order_Date)))*1.0/LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name,Location ORDER BY MONTH(Order_Date)) Rate
+FROM Restaurants r 
+LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+WHERE Status = 'Delivered' 
+GROUP BY Name, Location, MONTH(Order_Date) 
+ORDER BY Name, month;
+```
+
+✅ Action Plan: Month-over-Month Order Growth Analysis
+
+- Spot restaurants with consistent MoM growth 📈 in delivered orders and feature them in “Top Trending” or “Most Reliable” sections of the app
+- Flag restaurants with decreasing order growth and  help them optimize menus, pricing, and packaging
+- Correlate growth trends with customer retention and repeat ordering metrics and suggest loyalty programs for restaurants with stable growth
 
 ### 12. 🧱 Customer Segmentation: Gold vs. Silver
-- **Gold**: Above avg. spend  
-- **Silver**: Below avg. spend  
-- 🪙 Golds → retention offers, Silvers → upselling offers.
+
+![](CustomerSegmentation.PNG)
+
+```sql
+WITH customer_details AS (
+  SELECT c.Customer_ID, Name, AVG(Total_Amount) AS avg_customer_spend, avg_revenue 
+  FROM Customer c 
+  LEFT JOIN (
+    SELECT *, AVG(Total_Amount) OVER(ORDER BY (SELECT NULL)) AS avg_revenue FROM Orders
+  ) o ON c.Customer_ID = o.Customer_ID 
+  GROUP BY c.Customer_ID, Name, avg_revenue
+),
+customer_segments AS (
+  SELECT Customer_ID, Name,
+         CASE WHEN avg_customer_spend > avg_revenue THEN 'Gold' ELSE 'Silver' END AS customer_category 
+  FROM customer_details
+)
+SELECT customer_category, COUNT(DISTINCT Order_ID) AS total_orders, SUM(Total_Amount) AS total_revenue 
+FROM customer_segments cs 
+JOIN Orders o ON cs.Customer_ID = o.Customer_ID 
+GROUP BY customer_category;
+```
+
+✅ Action Plan: Customer Segmentation – Gold vs Silver
+
+- For **GOLD** customers we can provide exclusive deals, loyalty bonuses, or early access to new features or restaurants and offer priority customer support or VIP delivery service
+- Launch a Gold Membership Program for recurring benefits (free delivery, discounts) which personalizes offers based on their favorite cuisine or restaurants if the number of customers having gold membership decreases
+- Target Silver customers withIncentives for increased spending (e.g., spend $50 more to get Gold)
+- Invest more in retaining Gold customers and use cost-effective campaigns for Silver users until they move up tiers
+
 
 ### 13. 💵 Rider Earnings
 - Formula: `8% of Order Value + Tip`.
