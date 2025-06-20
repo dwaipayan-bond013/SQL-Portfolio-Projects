@@ -20,9 +20,27 @@ This SQL project explores the sales, delivery, and customer behavior data of  Zo
 ## Entity Relationship Diagram (ERD)
 The ERD for the analysis is present as follows
 
-![alt text](ERD.png)
+![alt text](ERD.PNG)
 
+🔑 Primary Keys
+Customers: CustomerID
 
+Orders: `OrderID`
+
+Restaurants: `Restaurant_ID`
+
+Deliveries: `DeliveryID`
+
+Riders: `RiderID`
+
+🔗 Foreign Keys
+Orders.`CustomerID` → Customers.`CustomerID`
+
+Orders.`Restaurant_ID` → Restaurants.`Restaurant_ID`
+
+Deliveries.`OrderID` → Orders.`OrderID`
+
+Deliveries.`RiderID`→ Riders.`RiderID`
 
 ## 📊 Analytical Insights & Recommendations
 
