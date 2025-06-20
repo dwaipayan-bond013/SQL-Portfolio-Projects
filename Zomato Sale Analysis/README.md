@@ -44,8 +44,8 @@ Deliveries.`RiderID`→ Riders.`RiderID`
 
 ## 📊 Analytical Insights & Recommendations
 
-### 1. 🔝 Top 5 Dishes Ordered by David Smith
-- Identified most ordered items between June–December 2023.
+### 1. 🔝 Top 5 Dishes Ordered by a specific customer(eg. David Smith)
+![alt text](Top5DIsh.PNG)
 - 👉 Great for personalizing recommendations and retention.
 
 ### 2. ⏰ Peak Order Timing
