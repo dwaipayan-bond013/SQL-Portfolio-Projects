@@ -194,6 +194,14 @@ SELECT Name, Location, Items,number_of_orders FROM most_popular_items WHERE rank
   
 ![](CustomerMonthlyorderanalysis.PNG)
 
+```sql
+SELECT Name, MONTH(Order_Date) AS month, COUNT(DATEPART(month, Order_Date)) AS number_of_order 
+FROM Customer c 
+LEFT JOIN Orders o ON c.Customer_ID = o.Customer_ID 
+GROUP BY Name, MONTH(Order_Date) 
+ORDER BY Name, month;
+```
+
 ✅ Action Plan: Customers Order Analysis Per Month
 
 - Spot trends in monthly order volumes per customer and boost sales during low-order months using personalized discounts or cashback for inactive users
