@@ -46,7 +46,7 @@ Deliveries.`RiderID`→ Riders.`RiderID`
 
 ### 1. 🔝 Top 5 Dishes Ordered by a specific customer(eg. David Smith)
 
-![alt text](Top5DIsh.PNG)
+![Top 5 Dish](Zomato%20Sale%20Analysis/Results%20Snippets/Top5DIsh.PNG)
 - 👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV.
 
 ### 2. ⏰ Peak Order Timing
