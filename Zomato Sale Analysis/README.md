@@ -45,12 +45,15 @@ Deliveries.`RiderID`→ Riders.`RiderID`
 ## 📊 Analytical Insights & Recommendations
 
 ### 1. 🔝 Top 5 Dishes Ordered by a specific customer(eg. David Smith)
+
 ![alt text](Top5DIsh.PNG)
-- 👉 Great for personalizing recommendations and retention.
+- 👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV.
 
 ### 2. ⏰ Peak Order Timing
-- Most orders placed between **6PM - 8PM**.
-- 📌 Allocate delivery staff and run promotions during this slot.
+- Most orders placed between **10AM - 12PM**.
+  
+![alt text](MostPopularTimeSlot.PNG)
+- 📌 To increase the number of orders it is the ideal time to allocate more delivery staff and run promotions during this slot.
 
 ### 3. 💸 Average Order Value of Power Users
 - High-frequency users (>400 orders) spend ₹430–₹550 per order.
