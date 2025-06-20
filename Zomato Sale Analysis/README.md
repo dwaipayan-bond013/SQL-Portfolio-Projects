@@ -23,53 +23,134 @@ The ERD for the analysis is present as follows
 ![alt text](ERD.PNG)
 
 🔑 Primary Keys
-Customers: CustomerID
+- Customers: CustomerID
 
-Orders: `OrderID`
+- Orders: `OrderID`
 
-Restaurants: `Restaurant_ID`
+- Restaurants: `Restaurant_ID`
 
-Deliveries: `DeliveryID`
+- Deliveries: `DeliveryID`
 
-Riders: `RiderID`
+- Riders: `RiderID`
 
 🔗 Foreign Keys
-Orders.`CustomerID` → Customers.`CustomerID`
 
-Orders.`Restaurant_ID` → Restaurants.`Restaurant_ID`
+- Orders.`CustomerID` → Customers.`CustomerID`
 
-Deliveries.`OrderID` → Orders.`OrderID`
+- Orders.`Restaurant_ID` → Restaurants.`Restaurant_ID`
 
-Deliveries.`RiderID`→ Riders.`RiderID`
+- Deliveries.`OrderID` → Orders.`OrderID`
+
+- Deliveries.`RiderID`→ Riders.`RiderID`
 
 ## 📊 Analytical Insights & Recommendations
 
 ### 1. 🔝 Top 5 Dishes Ordered by a specific customer(eg. David Smith)
 
-![Top 5 Dish](Zomato%20Sale%20Analysis/Results%20Snippets/Top5DIsh.PNG)
-- 👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV.
+![Top 5 Dish](Top5Dish.PNG)
+
+```sql
+WITH top_5_food AS (
+  SELECT o.Items, COUNT(o.Items) AS Number_of_orders,
+         DENSE_RANK() OVER (ORDER BY COUNT(o.Items) DESC) AS rank
+  FROM Customer c
+  JOIN Orders o ON c.Customer_ID = o.Customer_ID
+  WHERE c.Name = 'David Smith' AND o.Order_Date BETWEEN '2023-06-01' AND '2023-12-31'
+  GROUP BY o.Items
+)
+SELECT Items, Number_of_orders FROM top_5_food WHERE rank <= 5;
+```
+
+👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV. For example here SInce Salad is the lowest order item, it can be recommended along with noodles targeting a healthy package of meal.
 
 ### 2. ⏰ Peak Order Timing
 - Most orders placed between **10AM - 12PM**.
-  
-![alt text](MostPopularTimeSlot.PNG)
-- 📌 To increase the number of orders it is the ideal time to allocate more delivery staff and run promotions during this slot.
 
-### 3. 💸 Average Order Value of Power Users
-- High-frequency users (>400 orders) spend ₹430–₹550 per order.
-- 🎯 Reward loyalty via exclusive discounts or early access.
+![alt text](MostPopularTimeSlot.PNG)
+
+```sql
+WITH popular_timeslot AS (
+  SELECT Order_ID, Order_Time,
+         CASE 
+           WHEN DATEPART(hour, Order_Time) BETWEEN 0 AND 1 THEN '12AM - 2AM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 2 AND 3 THEN '2AM - 4AM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 4 AND 5 THEN '4AM - 6AM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 6 AND 7 THEN '6AM - 8AM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 8 AND 9 THEN '8AM - 10AM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 10 AND 11 THEN '10AM - 12PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 12 AND 13 THEN '12PM - 2PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 14 AND 15 THEN '2PM - 4PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 16 AND 17 THEN '4PM - 6PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 18 AND 19 THEN '6PM - 8PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 20 AND 21 THEN '8PM - 10PM'
+           WHEN DATEPART(hour, Order_Time) BETWEEN 22 AND 23 THEN '10PM - 12AM'
+         END AS Time_Interval
+  FROM Orders
+)
+SELECT TOP 1 Time_Interval, COUNT(Order_ID) AS number_of_orders 
+FROM popular_timeslot 
+GROUP BY Time_Interval 
+ORDER BY number_of_orders DESC;
+```
+
+📌 To increase the number of orders it is the ideal time to allocate more delivery staff and run promotions during this slot.
+
+### 3. 💸 Average Order Value of Power Users (i.e. users who have ordered more than 400 times)
+
+![](AvgOrderValuepercustomer.PNG)
+
+```sql
+SELECT Name, SUM(Total_Amount) / COUNT(Order_ID) AS avg_order_value 
+FROM Customer c 
+LEFT JOIN Orders o ON c.Customer_ID = o.Customer_ID 
+GROUP BY Name 
+HAVING COUNT(Order_ID) > 400 
+ORDER BY COUNT(Order_ID) DESC;
+```
+
+- High-frequency users (>400 orders) spend $50–$55 per order
+- 🎯 Reward loyalty via exclusive discounts or early access to resaturants can be provide to encourage regualr orders.
 
 ### 4. 🎖️ High-Value Customers
-- Users with lifetime spend > ₹22,000.
-- 📦 Eligible for VIP tiers and cashback campaigns.
+
+![](HighvalueCustomers.PNG)
+
+```sql
+SELECT c.Customer_ID, Name, SUM(Total_Amount) AS Total_Amount 
+FROM Customer c 
+LEFT JOIN Orders o ON c.Customer_ID = o.Customer_ID 
+GROUP BY c.Customer_ID, Name 
+HAVING SUM(Total_Amount) > 22000 
+ORDER BY COUNT(Order_ID) DESC;
+```
+- Users with lifetime spend > $22,000 are considered as a high value customer
+- 📦 Eligible for VIP tiers and cashback campaigns when launched
 
 ### 5. ⚠️ Undelivered Orders by Restaurant
-- Found restaurants with 50+ undelivered orders.
-- 🔧 Need process audit or customer service intervention.
+
+![](Restaurentswithfailedorders.PNG)
+
+```sql
+SELECT Name, Location, COUNT(DISTINCT Order_ID) AS total_failed_orders 
+FROM Restaurants r 
+LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+WHERE Status = 'Not delivered' 
+GROUP BY Name, Location 
+ORDER BY total_failed_orders DESC;
+```
+🔧 Since the number of failed order is significantly more following steps can be taken to improve the process
+- Need process audit or customer service intervention
+- Proactively issue vouchers or refunds to affected customers
+- If a restaurant fails repeatedly, delist it temporarily or permanently
+- Incentivize Reliable Restaurants like “98% delivery success”
 
 ### 6. 🏆 Top 10 Revenue Restaurants
-- Ranked using `DENSE_RANK()` on total revenue.
-- 📣 Feature these partners more prominently in app feeds.
+
+![](Top10revenuegeneratingrestaurants.PNG)
+
+💼 Business Insight: Strategy for Top 10 High-Revenue Restaurants
+-  Feature these partners more prominently in app feeds.
+-  Highlight them in social media campaigns or city-based food trend articles.
 
 ### 7. 🍟 Most Popular Items per Restaurant
 - Single most ordered dish per restaurant.
