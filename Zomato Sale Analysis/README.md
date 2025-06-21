@@ -108,8 +108,17 @@ HAVING COUNT(Order_ID) > 400
 ORDER BY COUNT(Order_ID) DESC;
 ```
 
-- High-frequency users (>400 orders) spend $50–$55 per order
-- 🎯 Reward loyalty via exclusive discounts or early access to resaturants can be provide to encourage regualr orders.
+💡 Insight: High-Value Order Patterns Among Power Users
+- The highest average order value is from John Johnson at $55.60, followed by Emma Rodriguez ($53.50) and William Johnson ($53.41)
+- A cluster of customers — 10 out of 14 listed — consistently maintain an average order value above $51, suggesting a strong mid-to-premium tier customer segment
+- Emma Wilson is the outlier with the lowest average value at ₹22.24, indicating either frequent low-cost orders or test/failed transactions.
+
+📌 Recommendations:
+
+- Offer tiered loyalty programs to customers with an average spend above ₹53 — they're most likely to engage in premium offerings.
+- Target customers with an average order value between ₹50–₹52 (e.g., David Smith, John Rodriguez) with combo offers or free delivery over ₹55 to nudge them higher.
+- Review Emma Wilson's order pattern — low value may indicate dissatisfaction, high frequency of small items, or potential test activity.
+- Group customers by AOV segments and personalize app/homepage recommendations accordingly.
 
 ### 4. 🎖️ High-Value Customers
 
@@ -123,8 +132,13 @@ GROUP BY c.Customer_ID, Name
 HAVING SUM(Total_Amount) > 22000 
 ORDER BY COUNT(Order_ID) DESC;
 ```
-- Users with lifetime spend > $22,000 are considered as a high value customer
-- 📦 Eligible for VIP tiers and cashback campaigns when launched
+
+💡 Insight:
+- John Johnson tops the chart with a total spend of $23,964.46
+- Others in the top segment: Emma Rodriguez ($22,844.78), William Johnson ($22,434.27), and Alice Smith ($22,074.86)
+- These customers represent a premium segment and are ideal for loyalty programs, personalized offers, and early access to new dishes
+
+📌 Recommendation: Offer exclusive discounts, referral bonuses, or a "Gold" tier membership to retain and engage these high-value customers
 
 ### 5. ⚠️ Undelivered Orders by Restaurant
 
@@ -138,12 +152,16 @@ WHERE Status = 'Not delivered'
 GROUP BY Name, Location 
 ORDER BY total_failed_orders DESC;
 ```
-🔧 Since the number of failed order is significantly more following steps can be taken to improve the process
-- Need process audit or customer service intervention
-- Proactively issue vouchers or refunds to affected customers
-- If a restaurant fails repeatedly, delist it temporarily or permanently
-- Incentivize Reliable Restaurants like “98% delivery success”
+💡 Insight:
+- Sushi Zen (226), Luigi’s Kitchen (225), and Lemongrass Kitchen (224) have the highest delivery failure counts
+- A total of 10+ restaurants crossed the 200+ failed orders threshold
 
+⚠️ Critical Insight: Sushi Zen appears both as a top revenue generator and a top in failed deliveries — a red flag
+
+🛠️ Recommendation:
+- Audit operational flow at Sushi Zen and Luigi’s Kitchen — focus on packaging, rider delays, or system glitches
+- Track repeat failures per customer; it risks customer churn
+  
 ### 6. 🏆 Top 10 Revenue Restaurants
 
 ![](Top10revenuegeneratingrestaurants.PNG)
@@ -159,10 +177,15 @@ WITH top_restaurants AS (
 SELECT Name, Location, total_revenue FROM top_restaurants WHERE rank <= 10;
 ```
 
-💼 Business Insight: Strategy for Top 10 High-Revenue Restaurants
--  Feature these partners more prominently in app feeds
--  Highlight them in social media campaigns or city-based food trend articles
--  Launch co-branded campaigns, discount weeks, or food festivals
+💡 Insight:
+- Sushi Zen tops the list with $23,215 total revenue
+- Close competitors include Lemongrass Kitchen ($22,724) and Curry House ($22,574)
+
+⚠️ Observation: Sushi Zen appears in both top revenue and top failed orders – a red flag suggesting operational issues despite popularity
+
+📌 Recommendation:
+- These restaurants should be featured in search rankings and promotional banners
+- However, Sushi Zen must resolve operational gaps to prevent customer churn
 
 ### 7. 🍟 Most Popular Items per Restaurant
 
@@ -511,6 +534,11 @@ GROUP BY Name, Location, MONTH(Order_Date);
 - Tracked order count growth ratio using `LAG()`.
 
 ---
+
+## 📌 Key Insights:
+
+ - The most popular time slot is between 10AM - 12PM which suggests more people are requesting for breakfast
+ - 
 
 ## 🛠️ SQL Techniques Used
 
