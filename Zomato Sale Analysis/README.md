@@ -253,7 +253,7 @@ ORDER BY avg_delivery_time;
 
 ### 11. 📉 MoM Order Growth (Restaurant-Level)
 
-![](Monthwiserestaurantgrowthratio.PNG)
+![](RestaurantWisemonthlyGrowth.PNG)
 
 ```sql
 
@@ -311,37 +311,204 @@ GROUP BY customer_category;
 
 
 ### 13. 💵 Rider Earnings
-- Formula: `8% of Order Value + Tip`.
-- 🧮 Helps HR/Finance departments track income distribution.
+
+ Formula: `8% of Order Value + Tip`.
+
+![](RiderMonthlyearnings.PNG)
+
+```sql
+SELECT r.Rider_ID, Name, MONTH(Order_Date) AS month, SUM((Total_Amount * 0.08) + Tip) AS Earnings 
+FROM Riders r 
+LEFT JOIN Deliveries d ON r.Rider_ID = d.Rider_ID 
+LEFT JOIN Orders o ON d.Order_ID = o.Order_ID 
+GROUP BY r.Rider_ID, Name, MONTH(Order_Date) 
+ORDER BY r.Rider_ID, Name, MONTH(Order_Date);
+```
+
+✅ Action Plan: Rider Monthly Earnings
+
+- Use earnings data to design tiered bonuses or incentives (e.g., “Top 10% earners get a $20 bonus”)
+- Ensure competitive earnings across months to prevent attrition. Recognize and reward long-term high performers with loyalty bonuses.
+- Helps HR/Finance departments track income distribution.
 
 ### 14. ⭐ Rider Rating Simulation
 - Based on delivery duration:
-  - `<30min`: 5⭐, `30–40`: 4⭐, `>60`: 1⭐, etc.
-- 🧭 Performance benchmark metric.
+  - `<30min`: 5⭐, `30–40`: 4⭐, `41-50`: 3⭐, `51-60`: 2⭐, `>60`: 1⭐, etc.
+
+![](RiderRatingAnalysis.PNG)
+
+``` sql
+WITH ratings AS (
+  SELECT r.Rider_ID, Name,
+         CASE 
+           WHEN ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME))) < 30 THEN '5 star'
+           WHEN ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME))) BETWEEN 30 AND 40 THEN '4 star'
+           WHEN ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME))) BETWEEN 41 AND 50 THEN '3 star'
+           WHEN ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME))) BETWEEN 51 AND 60 THEN '2 star'
+           ELSE '1 star' 
+         END AS Rating 
+  FROM Riders r 
+  LEFT JOIN Deliveries d ON r.Rider_ID = d.Rider_ID 
+  LEFT JOIN Orders o ON d.Order_ID = o.Order_ID 
+  WHERE Status = 'Delivered'
+)
+SELECT Rider_ID, Name, Rating, COUNT(Rating) AS count 
+FROM ratings 
+GROUP BY Rider_ID, Name, Rating 
+ORDER BY Rider_ID, Name;
+```
+
+✅ Action Plan: Rider Ratings Analysis
+- Offer performance bonuses or incentives for riders consistently rated ⭐⭐⭐⭐ and above
+- Identify riders frequently rated below 3 stars and provide targeted feedback and soft-skills training (punctuality, communication, handling orders, etc.)
+- Introduce a public-facing badge (e.g., “Top Rated Rider 🚴‍♂️”) visible to customers during live tracking
+ 
 
 ### 15. 🗓️ Restaurant Busiest Day
-- Found most popular day of the week per restaurant.
-- 👷 Helps schedule staffing accordingly.
+
+![](BusiestDayPerRestaurant.PNG)
+
+```sql
+WITH order_frequency AS (
+  SELECT Name, Location, DATENAME(dw, Order_Date) AS Dayname, COUNT(DISTINCT Order_ID) AS total_orders,
+         DENSE_RANK() OVER(PARTITION BY Name, Location ORDER BY COUNT(DISTINCT Order_ID) DESC) AS rank 
+  FROM Restaurants r 
+  JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+  GROUP BY Name, Location, DATENAME(dw, Order_Date)
+)
+SELECT Name, Location, total_orders,Dayname 
+FROM order_frequency 
+WHERE rank = 1;
+```
+
+✅ Action Plan: Using Busiest Day Data per Restaurant
+
+- Assign more delivery partners to restaurants on their busiest days by using historical peak-day trends to pre-position riders near high-demand zones
+- Run day-specific promotions (e.g., “Wednesday Feast Offers”) for each restaurant to boost already strong performance
+- If peak days result in operational strain, throttle new orders temporarily or implement surge pricing during peak hours to manage demand
 
 ### 16. 💰 Customer Lifetime Value
-- Aggregated total revenue per customer.
-- 🎯 Ideal for CLV-based marketing targeting.
+
+![](LifetimeValue.PNG)
+
+```sql
+SELECT Name, SUM(Total_Amount) AS total_revenue 
+FROM Customer c 
+LEFT JOIN Orders o ON c.Customer_ID = o.Customer_ID 
+GROUP BY Name 
+ORDER BY total_revenue DESC;
+```
+
+📌 Strategic Actions to Take:
+
+- Identify top spenders and offer them exclusive benefits (e.g., premium support, early access to deals)
+- Use CLV to segment users (e.g., high CLV = target with luxury food, low CLV = promote budget-friendly deals)
+- Provide AI-driven suggestions based on high CLV users’ past purchases (e.g., cuisine preferences, restaurants, price range)
+- If a high CLV customer becomes inactive, trigger win-back campaigns (discount codes, re-engagement offers)
 
 ### 17. 📅 Sales Trends Over Months
-- Month-over-month revenue trend and percentage change.
-- 📊 Use for financial forecasting and budget allocation.
+
+![](MonthlyTrendofSales.PNG)
+
+```sql
+SELECT DATENAME(month, Order_Date) AS month, SUM(Total_Amount) AS total_sale,
+  LAG(SUM(Total_Amount), 1) OVER(ORDER BY MONTH(Order_Date)) AS prev_month_sale,
+  (SUM(Total_Amount) - LAG(SUM(Total_Amount), 1) OVER(ORDER BY MONTH(Order_Date))) * 100.0 / 
+   LAG(SUM(Total_Amount), 1) OVER(ORDER BY MONTH(Order_Date)) AS percent_change
+FROM Orders 
+GROUP BY DATENAME(month, Order_Date), MONTH(Order_Date);
+```
+
+📌 Strategic Actions to Take:
+
+- Identify High-Performing months and boost campaigns during those months in the following year to maximize sales
+- Investigate reasons behind MoM drops (e.g., service issues, holidays, market competition)
+- Run targeted retention offers or restaurant audits for underperforming months
+- Allocate ad budgets based on seasonal sales trends (e.g., more spend in months with proven growth)
+- Use growth percentage data to set data-driven targets for internal teams and restaurant partners.
 
 ### 18. 🏎️ Fastest vs. Slowest Riders
-- Based on avg. delivery time.
-- 📌 Can be tied to incentives or mentorship.
+
+Based on avg. delivery time
+
+![](EfficientandNonEfficientdriver.PNG)
+
+```sql
+WITH rider_efficiency AS (
+  SELECT 
+    Name,
+    AVG(ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME)))) AS avg_delivery_time,
+    DENSE_RANK() OVER (ORDER BY AVG(ABS(DATEDIFF(MINUTE, CAST(Pickup_time AS TIME), CAST(Delivery_Time AS TIME))))) AS rnk
+  FROM Riders r
+  LEFT JOIN Deliveries d ON r.Rider_ID = d.Rider_ID
+  GROUP BY Name
+),
+rank_bounds AS (
+  SELECT 
+    MIN(rnk) AS min_rank,
+    MAX(rnk) AS max_rank
+  FROM rider_efficiency
+)
+SELECT
+  MIN(CASE WHEN re.rnk = rb.min_rank THEN re.Name END) AS Fastest_Rider,
+  MIN(CASE WHEN re.rnk = rb.max_rank THEN re.Name END) AS Slowest_Rider
+FROM rider_efficiency re
+CROSS JOIN rank_bounds rb;
+```
 
 ### 19. 🌦️ Seasonal Item Popularity
-- Mapped dish orders across Spring, Summer, Rainy, Winter.
-- 🌸 Helps in launching seasonal combos.
+
+Mapped dish orders across Spring, Summer, Rainy, Winter
+
+![](Seasonwiseorderitempopularity.PNG)
+
+```sql
+WITH seasons AS (
+  SELECT MONTH(Order_Date) AS month, Order_ID, Items,
+         CASE 
+           WHEN MONTH(Order_Date) BETWEEN 2 AND 3 THEN 'Spring'
+           WHEN MONTH(Order_Date) BETWEEN 4 AND 6 THEN 'Summer'
+           WHEN MONTH(Order_Date) BETWEEN 7 AND 9 THEN 'Rainy'
+           ELSE 'Winter' 
+         END AS seasons 
+  FROM Orders
+)
+SELECT Items, seasons, COUNT(DISTINCT Order_ID) AS count 
+FROM seasons 
+GROUP BY Items, seasons 
+ORDER BY Items, count DESC;
+```
+
+📌 Strategic Actions to Take:
+
+- Highlight top seasonal items in the app UI during their peak months and promote season-exclusive dishes that align with customer preferences
+- Run seasonal discounts and combo offers on high-demand items
+- Push notifications and emails can advertise top items each season
+- Recommend popular seasonal items in the “Suggested for You” or “Trending Now” sections
+- Allow users to filter by “Winter Favorites”, “Rainy Specials”, etc., improving their browsing and purchase experience
+- Use seasonal trends to develop or test new dishes aligned with popular tastes in that time frame
+- Leverage seasonal data in sync with regional festivals or events for better cultural targeting and engagement
 
 ### 20. 📈 Restaurant Growth Ratio (MoM)
+
+![](Monthwiserestaurantgrowthratio.PNG)
+
+```sql
+SELECT Name, Location, MONTH(Order_Date) AS month,
+       COUNT(DISTINCT Order_ID) * 1.0 / 
+       LAG(COUNT(DISTINCT Order_ID), 1) OVER(PARTITION BY Name, Location ORDER BY MONTH(Order_Date)) AS growth_ratio 
+FROM Restaurants r 
+LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID 
+GROUP BY Name, Location, MONTH(Order_Date);
+```
+
+📌 Strategic Actions to Take:
+
+- Identify restaurants consistently showing positive growth and consider featuring them on the home page or in top recommendations.
+- Optimize Promotions by allocating marketing budget based on growth trends—boost ads for fast-growing restaurants and consider retention strategies for declining ones
+-  Can use this data to predict Zomato's platform-wide growth and estimate revenue contribution from various restaurant tiers.
+- Integrate MoM growth into the internal restaurant ranking algorithm to surface more dynamic and active restaurants to users.
 - Tracked order count growth ratio using `LAG()`.
-- 🧩 Used to detect momentum and trigger intervention.
 
 ---
 
