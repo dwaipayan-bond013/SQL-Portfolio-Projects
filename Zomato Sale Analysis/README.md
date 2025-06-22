@@ -355,7 +355,7 @@ GROUP BY customer_category;
 - Silver customers contribute higher overall revenue but have a lower average order value than Gold
 - Gold customers are more profitable per order — possibly more loyal or inclined to premium items
 
-✅Recommndations:
+✅ Recommndations:
 - Upsell Silver customers through personalized deals to increase order value
 - Target Silver customers withIncentives for increased spending (e.g., spend $50 more to get Gold)
 - Retain Gold customers with loyalty benefits (free delivery, early access to offers, VIP support)
@@ -383,7 +383,7 @@ ORDER BY r.Rider_ID, Name, MONTH(Order_Date);
 - Significant earning spikes suggest bonus or incentive schemes are working
 - Can use historical peak months (like November) to plan incentive-driven campaigns and rider staffing
 
-✅Recommndations:
+✅ Recommndations:
 - Implement performance-based bonuses during high-demand months
 - Identify low-earning months and redistribute orders or training accordingly
 
@@ -414,12 +414,16 @@ GROUP BY Rider_ID, Name, Rating
 ORDER BY Rider_ID, Name;
 ```
 
-✅ Action Plan: Rider Ratings Analysis
+💡 Insights:
+- Top 3 riders (Olivia, William, Robert) have the highest 5-star feedback with minimal 1-stars
+- Strong correlation between delivery time & ratings (Olivia had 42 mins average delivery, with 55 5-stars).
+
+✅ Recommndations:
+- Build a rider leaderboard to showcase high performers
 - Offer performance bonuses or incentives for riders consistently rated ⭐⭐⭐⭐ and above
-- Identify riders frequently rated below 3 stars and provide targeted feedback and soft-skills training (punctuality, communication, handling orders, etc.)
+- Use feedback to coach low-rated riders (e.g., David Rodriguez, Michael Davis)
 - Introduce a public-facing badge (e.g., “Top Rated Rider 🚴‍♂️”) visible to customers during live tracking
  
-
 ### 15. 🗓️ Restaurant Busiest Day
 
 ![](BusiestDayPerRestaurant.PNG)
@@ -437,11 +441,15 @@ FROM order_frequency
 WHERE rank = 1;
 ```
 
-✅ Action Plan: Using Busiest Day Data per Restaurant
+💡 Insights:
+- Most restaurants show peak order volume on Thursday, Sunday, and Friday
+- Bangkok Bites tops the chart with 79 orders on Thursday.
+- Several restaurants including Lemongrass Kitchen and Burrito Bros show multiple peak days (Monday, Thursday, Sunday).
 
-- Assign more delivery partners to restaurants on their busiest days by using historical peak-day trends to pre-position riders near high-demand zones
-- Run day-specific promotions (e.g., “Wednesday Feast Offers”) for each restaurant to boost already strong performance
-- If peak days result in operational strain, throttle new orders temporarily or implement surge pricing during peak hours to manage demand
+✅ Business Actions:
+- Optimize staffing and inventory on peak days.
+- Run day-specific promotions or discounts (e.g., "Snacking Thursday") to boost average order value (AOV)
+- Targeted notifications to customers on peak days for better engagement
 
 ### 16. 💰 Customer Lifetime Value
 
@@ -455,12 +463,15 @@ GROUP BY Name
 ORDER BY total_revenue DESC;
 ```
 
-📌 Strategic Actions to Take:
+💡 Insights:
+- John Johnson leads with a lifetime value of over $23,964
+- Top 5 high-value customers (John Johnson, Emma Rodriguez, Olivia Smith, William Johnson, Sophia Brown) all have CLTV above $22,000
+- These users contribute significantly to total revenue and should be considered VIPs
 
-- Identify top spenders and offer them exclusive benefits (e.g., premium support, early access to deals)
-- Use CLV to segment users (e.g., high CLV = target with luxury food, low CLV = promote budget-friendly deals)
+✅ Business Actions:
+- Design a Gold-tier loyalty program for high LTV customers
+- Offer exclusive rewards or personalized offers (e.g., cashback, free deliveries)
 - Provide AI-driven suggestions based on high CLV users’ past purchases (e.g., cuisine preferences, restaurants, price range)
-- If a high CLV customer becomes inactive, trigger win-back campaigns (discount codes, re-engagement offers)
 
 ### 17. 📅 Sales Trends Over Months
 
@@ -475,13 +486,17 @@ FROM Orders
 GROUP BY DATENAME(month, Order_Date), MONTH(Order_Date);
 ```
 
-📌 Strategic Actions to Take:
+💡 Insights:
+- Sharp drop in February (↓13.70%) followed by strong recovery in March (↑23.86%)
+- Sales volatility in April–August; minor fluctuations, indicating seasonal or operational factors
+- November shows peak sales ($44,995) and December($45,266) continues with growth
 
-- Identify High-Performing months and boost campaigns during those months in the following year to maximize sales
-- Investigate reasons behind MoM drops (e.g., service issues, holidays, market competition)
+✅ Business Actions:
+- Investigate drop in June & February – possibly due to off-season trends or service issues
 - Run targeted retention offers or restaurant audits for underperforming months
+- Promote campaigns heavily during March, November, December – when customer response is higher
 - Allocate ad budgets based on seasonal sales trends (e.g., more spend in months with proven growth)
-- Use growth percentage data to set data-driven targets for internal teams and restaurant partners.
+- Use predictive models to forecast and smoothen sales cycles
 
 ### 18. 🏎️ Fastest vs. Slowest Riders
 
@@ -535,15 +550,14 @@ GROUP BY Items, seasons
 ORDER BY Items, count DESC;
 ```
 
-📌 Strategic Actions to Take:
+💡 Insights: Winter is the peak season for all major food categories
 
-- Highlight top seasonal items in the app UI during their peak months and promote season-exclusive dishes that align with customer preferences
-- Run seasonal discounts and combo offers on high-demand items
-- Push notifications and emails can advertise top items each season
-- Recommend popular seasonal items in the “Suggested for You” or “Trending Now” sections
+✅ Business Actions:
+- Create winter combo menus
+- Use targeted marketing for top items like Biryani and Pizza
+- Scale inventory and kitchen staff for winter months to handle higher demand
 - Allow users to filter by “Winter Favorites”, “Rainy Specials”, etc., improving their browsing and purchase experience
-- Use seasonal trends to develop or test new dishes aligned with popular tastes in that time frame
-- Leverage seasonal data in sync with regional festivals or events for better cultural targeting and engagement
+- Integrate seasonal data in sync with regional festivals or events for better cultural targeting and engagement
 
 ### 20. 📈 Restaurant Growth Ratio (MoM)
 
@@ -558,20 +572,21 @@ LEFT JOIN Orders o ON r.Restaurant_ID = o.Restaurant_ID
 GROUP BY Name, Location, MONTH(Order_Date);
 ```
 
-📌 Strategic Actions to Take:
+💡 Insights:
+- Bangkok Bites (730 Main St)
+   - Showed consistent positive growth most months
+   - Best month: May (1.324) and October (1.28).
+   - Weakest month: September (-0.961)
+- Bella Cucina (285 Park Lane)
+   - Also shows steady growth, with peak performance in May (1.322).
+   - Growth slowdown observed in March (1.0).
 
-- Identify restaurants consistently showing positive growth and consider featuring them on the home page or in top recommendations.
+✅ Business Actions:
+- Double down on Bangkok Bites' successful months with promotions
+- Investigate September drop – possibly due to seasonal changes or operational issues
+- Maintain and reinforce positive growth for Bella Cucina with targeted campaigns in underperforming months
+- Integrate MoM growth into the internal restaurant ranking algorithm to surface more dynamic and active restaurants to users
 - Optimize Promotions by allocating marketing budget based on growth trends—boost ads for fast-growing restaurants and consider retention strategies for declining ones
--  Can use this data to predict Zomato's platform-wide growth and estimate revenue contribution from various restaurant tiers.
-- Integrate MoM growth into the internal restaurant ranking algorithm to surface more dynamic and active restaurants to users.
-- Tracked order count growth ratio using `LAG()`.
-
----
-
-## 📌 Key Insights:
-
- - The most popular time slot is between 10AM - 12PM which suggests more people are requesting for breakfast
- - 
 
 ## 🛠️ SQL Techniques Used
 
@@ -583,15 +598,23 @@ GROUP BY Name, Location, MONTH(Order_Date);
 
 ---
 
-## 🧪 Sample Use Cases
-
-- Build customer loyalty engine based on lifetime value and segmentation.
-- Create operational dashboard for rider performance and restaurant delivery failures.
-- Recommend promotions by season, time slot, or trending dishes.
-- Highlight high-performing restaurants and customers for sales/marketing.
+## 🔑 Key Takeaways & Strategic Actions
+- High-Lifetime Customers: Create a "Zomato Elite" program for users like John Johnson.
+- Red-Flag Restaurants: Investigate top earners with high failed orders (e.g., Sushi Zen).
+- Rider Recognition: Promote riders like Mary Garcia & Olivia Johnson as model employees.
+- Seasonal Strategy: Launch seasonal favorites to align with item trends.
+- Gold vs. Silver Campaigns: Gold = Retention focus | Silver = Upsell strategy.
+- Data-Backed Growth Support: Prioritize app visibility for restaurants with positive growth momentum.
 
 ---
 
-## 📁 Folder Structure
+## 🧾 Conclusion
+This Zomato Sales Analysis project showcases the power of SQL in reveling actionable business intelligence from raw transactional data. Through comprehensive analysis across customer behavior, restaurant performance, and delivery efficiency, we were able to:
+  - Identify high-value customers and segment them for targeted loyalty strategies
+  - Detect restaurant-level trends in growth, revenue, and operational issues
+  - Highlight peak order timings, popular items, and seasonal preferences to support marketing decisions
+  - Assess rider performance and payout trends to optimize delivery operations
+
+By transforming 20+ analytical queries into strategic insights, this project demonstrates how data-driven decisions can boost revenue, enhance customer satisfaction, and streamline delivery logistics. This analysis provides a strong foundation for dashboarding, predictive modeling, and business expansion planning.
 
 
