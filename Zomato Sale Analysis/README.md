@@ -61,7 +61,7 @@ WITH top_5_food AS (
 SELECT Items, Number_of_orders FROM top_5_food WHERE rank <= 5;
 ```
 
-👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV. For example here SInce Salad is the lowest order item, it can be recommended along with noodles targeting a healthy package of meal.
+👉 Based on customer segmentation and this result personalised recommendations can be generated along with other offers to increase CLV. For example here Since Salad is the lowest order item, it can be recommended along with noodles targeting a healthy package of meal.
 
 ### 2. ⏰ Peak Order Timing
 - Most orders placed between **10AM - 12PM**.
@@ -93,7 +93,14 @@ GROUP BY Time_Interval
 ORDER BY number_of_orders DESC;
 ```
 
-📌 To increase the number of orders it is the ideal time to allocate more delivery staff and run promotions during this slot.
+🔍 Interpretation:
+This is a key pre-lunch window, indicating that customers are most active during late morning hours — likely placing orders for lunch either at work or from home.
+
+💡 Strategic Recommendations:
+- Optimize Delivery Staff: Increase rider availability and reduce prep time during this slot to handle peak demand
+- Boost Marketing: Run time-sensitive discounts or "early lunch" combo offers between 10–12PM
+- Menu Adjustments: Promote fast-moving and easy-to-prepare items during this window for quicker turnarounds
+- Push Notifications: Use app or SMS nudges at 9:45–10:00AM to remind users about meal deals before the rush begins
 
 ### 3. 💸 Average Order Value of Power Users (i.e. users who have ordered more than 400 times)
 
@@ -115,8 +122,8 @@ ORDER BY COUNT(Order_ID) DESC;
 
 📌 Recommendations:
 
-- Offer tiered loyalty programs to customers with an average spend above ₹53 — they're most likely to engage in premium offerings.
-- Target customers with an average order value between ₹50–₹52 (e.g., David Smith, John Rodriguez) with combo offers or free delivery over ₹55 to nudge them higher.
+- Offer tiered loyalty programs to customers with an average spend above $53 — they're most likely to engage in premium offerings.
+- Target customers with an average order value between $50–$52 (e.g., David Smith, John Rodriguez) with combo offers or free delivery over $55 to nudge them higher.
 - Review Emma Wilson's order pattern — low value may indicate dissatisfaction, high frequency of small items, or potential test activity.
 - Group customers by AOV segments and personalize app/homepage recommendations accordingly.
 
