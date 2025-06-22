@@ -203,13 +203,15 @@ WITH most_popular_items AS (
 )
 SELECT Name, Location, Items,number_of_orders FROM most_popular_items WHERE rank = 1;;
 ```
+💡 Insight:
+- Pizza and Tacos are high-frequency items across several restaurants (up to 66 orders).
+- Noodles and Salad are also recurrent popular items.
 
-📌 Strategic Uses of Most Popular Items Per Restaurant Data:
-
-- Highlight these items on Zomato's app and website with badges like "Most Popular" and run targeted promotions or discounts on these items to increase conversion
-- Offer incentives for consistently popular dishes with good delivery ratings
-- Understand dish popularity by area—tailor Zomato campaigns based on food preferences in each city or neighborhood
+📌 Recommendation:
+- Design combo offers or item-based campaigns featuring these dishes
+- Optimize inventory and preparation times for these SKUs
 - Run localized ads featuring these popular dishes to increase order frequency from those restaurants
+- Highlight these items on Zomato's app and website with badges like "Most Popular" and run targeted promotions or discounts on these items to increase conversion
 
 ### 8. 📈 Customer Order Trend (Monthly)
 
@@ -225,12 +227,11 @@ GROUP BY Name, MONTH(Order_Date)
 ORDER BY Name, month;
 ```
 
-✅ Action Plan: Customers Order Analysis Per Month
+💡 Insight:
+- Alice Davis shows a stable and increasing trend, peaking at 38–39 orders/month in Sept–Oct
+- Alice Jones also shows high variation, with 44 orders in May, up from 27 in Jan
 
-- Spot trends in monthly order volumes per customer and boost sales during low-order months using personalized discounts or cashback for inactive users
-- Detect customers with declining monthly activity and re-engage them through loyalty programs or reminders
-- Identify customers who suddenly stop ordering in a given month and initiate retention campaigns or surveys
-- Allocate marketing budget and timing based on user activity trends — more during high-engagement months, creative campaigns in low ones
+📌 Recommendation: These customers are engaged consistently year-round, and marketing campaigns can be timed appropriately to coincide with months of high 
   
 ### 9. 🔁 MoM Cancellation Trend
 
@@ -253,11 +254,13 @@ GROUP BY Name, Location, MONTH(Order_Date)
 ORDER BY Name, month;
 ```
 
-✅ Action Plan: MoM Cancellation Analysis of Restaurants
+💡 Insight:
+- Bangkok Bites saw significant fluctuation as cancellations fell from 27 (Jan) to 11 (Mar), but spiked again in May (28)
+- Bella Cucina had a big jump from 12 (Jan) to 20 (Feb), followed by steady improvement
 
-- Detect restaurants with consistently increasing cancellation trends by setting thresholds (e.g., 10% MoM increase) to trigger intervention
-- Determine reasons for order cancellations: delivery delays, out-of-stock items, quality issues, etc
-- For repeat offenders, introduce soft penalties like reduced visibility in search results or customer filters
+📌 Action Plan:
+- Months with increased cancellations may indicate internal issues — out-of-stock items, quality issues, etc. Hence need to monitor operational logs.
+- Consistent improvement months (e.g., April–May for Bella Cucina) may reflect successful process optimizations.
 
 
 ### 10. 🚴‍♂️ Average Rider Delivery Time
@@ -273,6 +276,15 @@ JOIN Deliveries d ON r.Rider_ID = d.Rider_ID
 GROUP BY r.Rider_ID, Name 
 ORDER BY avg_delivery_time;
 ```
+
+💡 Insight:
+- Mary Garcia (29 mins) and William Rodriguez (31 mins) are the most efficient
+- Mary Smith and Michael Rodriguez took over 60+ mins, making them the slowest
+- 2x delivery time variation affects customer experience
+
+📌 Recommendation:
+- Consider incentives or bonuses for top riders
+- Identify if slower riders are assigned to high-traffic zones or complex deliveries and provide routing assistance or support tools
 
 ### 11. 📉 MoM Order Growth (Restaurant-Level)
 
@@ -295,11 +307,25 @@ GROUP BY Name, Location, MONTH(Order_Date)
 ORDER BY Name, month;
 ```
 
-✅ Action Plan: Month-over-Month Order Growth Analysis
+💡 Insight:
+- 📉 Bangkok Bites – Inconsistent Delivery Trends
+    - Experienced 3 consecutive months of decline (July: -26%, Aug: -21%, Oct: -12%)
+    - Growth seen in September (+45%) and November (+7%)
 
-- Spot restaurants with consistent MoM growth 📈 in delivered orders and feature them in “Top Trending” or “Most Reliable” sections of the app
-- Flag restaurants with decreasing order growth and  help them optimize menus, pricing, and packaging
-- Correlate growth trends with customer retention and repeat ordering metrics and suggest loyalty programs for restaurants with stable growth
+📌 Interpretation: Volatile performance suggests external factors (e.g., operational bottlenecks, demand shifts)
+
+✅ Action: Investigate reasons behind volatility like staffing, promotions, quality dips etc.
+
+- 📉 Bella Cucina – Dramatic Early Drop & Strong Recovery
+   - Started with a -66% drop in February, then a +40% increase in March
+   - Followed by fluctuating growth with smaller gains/losses (April: +28%, May: -33%)
+   - Major positive spike in November: +100% growth (from 11 to 22 deliveries)
+
+📌 Interpretation: Possibly implemented successful turn-around strategy—could be new menu items, marketing push, or improved operations.
+
+✅ Action: 
+- Analyze internal changes that led to the November jump, replicate across other underperforming branches.
+- Month-over-Month Order Growth Analysis and correlate growth trends with customer retention and repeat ordering metrics and suggest loyalty programs for restaurants with stable growth
 
 ### 12. 🧱 Customer Segmentation: Gold vs. Silver
 
@@ -325,13 +351,15 @@ JOIN Orders o ON cs.Customer_ID = o.Customer_ID
 GROUP BY customer_category;
 ```
 
-✅ Action Plan: Customer Segmentation – Gold vs Silver
+💡 Insight:
+- Silver customers contribute higher overall revenue but have a lower average order value than Gold
+- Gold customers are more profitable per order — possibly more loyal or inclined to premium items
 
-- For **GOLD** customers we can provide exclusive deals, loyalty bonuses, or early access to new features or restaurants and offer priority customer support or VIP delivery service
-- Launch a Gold Membership Program for recurring benefits (free delivery, discounts) which personalizes offers based on their favorite cuisine or restaurants if the number of customers having gold membership decreases
+✅Recommndations:
+- Upsell Silver customers through personalized deals to increase order value
 - Target Silver customers withIncentives for increased spending (e.g., spend $50 more to get Gold)
+- Retain Gold customers with loyalty benefits (free delivery, early access to offers, VIP support)
 - Invest more in retaining Gold customers and use cost-effective campaigns for Silver users until they move up tiers
-
 
 ### 13. 💵 Rider Earnings
 
@@ -348,11 +376,16 @@ GROUP BY r.Rider_ID, Name, MONTH(Order_Date)
 ORDER BY r.Rider_ID, Name, MONTH(Order_Date);
 ```
 
-✅ Action Plan: Rider Monthly Earnings
+💡 Insights:
+- Monthly earnings ranged from $66 to $248, showing seasonal or performance-based variability
+- Peak month: November (₹248)
+- William Smith’s (RID002) earnings are less variable, possibly due to consistent performance
+- Significant earning spikes suggest bonus or incentive schemes are working
+- Can use historical peak months (like November) to plan incentive-driven campaigns and rider staffing
 
-- Use earnings data to design tiered bonuses or incentives (e.g., “Top 10% earners get a $20 bonus”)
-- Ensure competitive earnings across months to prevent attrition. Recognize and reward long-term high performers with loyalty bonuses.
-- Helps HR/Finance departments track income distribution.
+✅Recommndations:
+- Implement performance-based bonuses during high-demand months
+- Identify low-earning months and redistribute orders or training accordingly
 
 ### 14. ⭐ Rider Rating Simulation
 - Based on delivery duration:
