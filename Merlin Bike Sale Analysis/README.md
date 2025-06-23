@@ -419,4 +419,109 @@ GROUP BY customer_category;
    - Bundle high-cost items with services (warranty, upgrades) to justify pricing
    - Cross-promote with accessories or seasonal packages
 
+13. 👤 Customer Report Analysis
 
+    ![](CustomerAnalysis.PNG)
+
+```sql
+WITH Root_Query AS (
+    /*---------------------------------------------------------------------------
+    1) Base Query: Retrieving core columns from tables
+    ---------------------------------------------------------------------------*/
+    SELECT 
+        c.customer_key,
+        customer_number,
+        CONCAT(first_name, ' ', last_name) AS Customer_Name,
+        birthdate,
+        DATEDIFF(YEAR, birthdate, GETDATE()) AS Age,
+        order_number,
+        product_key,
+        order_date,
+        sales_amount,
+        quantity
+    FROM customers c
+    LEFT JOIN sales s ON c.customer_key = s.customer_key
+    WHERE order_date IS NOT NULL
+),
+
+Customer_Aggregation AS (
+    /*---------------------------------------------------------------------------
+    2) Customer Aggregations: Summarizing key metrics at the customer level
+    ---------------------------------------------------------------------------*/
+    SELECT 
+        customer_key,
+        customer_number,
+        Customer_Name,
+        Age,
+        COUNT(DISTINCT order_number) AS total_orders,
+        SUM(sales_amount) AS total_sales,
+        SUM(quantity) AS total_quantity_purchased,
+        COUNT(DISTINCT product_key) AS total_products,
+        MAX(order_date) AS last_order_date,
+        DATEDIFF(MONTH, MIN(order_date), MAX(order_date)) AS lifespan
+    FROM Root_Query
+    GROUP BY customer_key, customer_number, Customer_Name, Age
+)
+
+SELECT 
+    customer_key,
+    customer_number,
+    Customer_Name,
+    Age,
+    total_orders,
+    total_sales,
+    total_quantity_purchased,
+    total_products,
+    lifespan,
+    CASE 
+        WHEN Age < 20 THEN 'Under 20'
+        WHEN Age BETWEEN 20 AND 29 THEN '20-29'
+        WHEN Age BETWEEN 30 AND 39 THEN '30-39'
+        WHEN Age BETWEEN 40 AND 49 THEN '40-49'
+        ELSE 'Greater than 50'
+    END AS Age_Group,
+    CASE 
+        WHEN lifespan >= 12 AND total_sales > 5000 THEN 'VIP'
+        WHEN lifespan >= 12 AND total_sales <= 5000 THEN 'Regular'
+        ELSE 'New'
+    END AS customer_category,
+    DATEDIFF(MONTH, last_order_date, GETDATE()) AS time_since_last_order,
+    CASE 
+        WHEN total_orders = 0 THEN 0
+        ELSE ROUND(total_sales / total_orders,2)
+    END AS avg_order_value,
+    CASE 
+        WHEN lifespan = 0 THEN 0
+        ELSE ROUND(total_sales / lifespan,2)
+    END AS avg_monthly_spend
+FROM Customer_Aggregation;
+```
+
+🔎 Insights: 
+- New Customers Make Up Majority — But Have Low Engagement. Many "New" customers have:
+  - Low total sales and zero avg. monthly spend
+  - Lifespan often ≤1 month, suggesting no repeat orders
+  - Long time since last order (140–150+ days)
+👉 Most new users are not converting into repeat buyers
+
+- VIP Customers Are Highly Profitable.VIPs like Dominique Prasad and Johnny Moyer:
+  - High avg order values ($1555 – $2961)
+  - High monthly spend ($236 – $777)
+  - Long customer lifespans (11–16 months)
+👉 Interpretation: VIPs are your revenue backbone — small in number, but high in value.
+
+- Several High-Spend Customers Have Been Inactive
+- Despite high order values, many have not purchased in over 140 days
+  - Example: Ebony Martin (avg order: $2183, last order 140 days ago), Marcus Davis (₹41.33, 144 days ago)
+👉 Interpretation: Leakage in revenue due to poor re-engagement
+
+-  Some Customers Have High Order Values But Only Bought Once
+  - Daniel Miller, Emily Rodriguez, Lance Ramos — all with high avg order values but only 1 purchase
+👉 Interpretation: Missed opportunities to build customer loyalty and increase LTV
+
+📌 Business Strategy: 
+- Launch "Personalized Discount" email campaigns with personalized product suggestions or discount codes
+- Use SMS/push reminders for customers inactive >90 days but with high avg order values
+- Incentivize 2nd purchase with “Buy Again & Save” coupons
+- Offer Premium customers with exclusive early access to products, limited drops, or loyalty tiers
+- Set up email onboarding flows with product education, usage tips, and customer stories
