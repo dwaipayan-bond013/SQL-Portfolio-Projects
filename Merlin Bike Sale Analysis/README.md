@@ -268,4 +268,67 @@ Tables and Columns Used:
 - Introducing  new product lines or categories to re-spark growth early 2012 may improve the sale
 - Test new customer acquisition channels (influencer marketing, partnerships)
 
+10. 🧩 Product performance and YoY analysis
+
+    ![](ProductperformanceYoYanalysis.PNG)
+
+```sql
+WITH t1 AS (
+  SELECT YEAR(order_date) AS year, category,p.product_name,
+  SUM(sales_amount) AS total_sales FROM products p
+  JOIN sales s ON p.product_key = s.product_key
+  WHERE YEAR(order_date) IS NOT NULL
+  GROUP BY YEAR(order_date), category, p.product_name
+)
+SELECT *,
+AVG(total_sales) OVER (PARTITION BY product_name) AS avg_sales,
+total_sales - AVG(total_sales) OVER (PARTITION BY product_name) AS avg_diff,
+CASE 
+  WHEN total_sales > AVG(total_sales) OVER (PARTITION BY product_name) THEN 'Above_Average'
+  WHEN total_sales < AVG(total_sales) OVER (PARTITION BY product_name) THEN 'Below_Average'
+  ELSE 'Average'
+END AS avg_change,
+LAG(total_sales, 1) OVER (PARTITION BY product_name ORDER BY product_name) AS prev_year_sales,
+total_sales - LAG(total_sales, 1) OVER (PARTITION BY product_name ORDER BY product_name) AS change_wrt_prev_year,
+CASE 
+  WHEN total_sales > LAG(total_sales, 1) OVER (PARTITION BY product_name ORDER BY product_name) THEN 'Increasing'
+  WHEN total_sales < LAG(total_sales, 1) OVER (PARTITION BY product_name ORDER BY product_name) THEN 'Decreasing'
+  ELSE 'No Change'
+END AS change
+FROM t1;
+```
+
+🔎 Insights: 
+- Bikes: Show both high-volume and high-variance sales
+   - Mountain-100 and Mountain-200 variants consistently deliver large sales
+   - Strong positive YoY growth in key models like Mountain-200 Black, 42 (+₹602K)
+- Accessories: Mixed performance
+   - All-Purpose Bike Stand and Fender Set – Mountain show strong upward trends
+   - Mountain Tire Tube and Bike Wash – Dissolver show YoY decline in later years
+- Clothing: Struggles persist
+   - Most clothing items (e.g., Classic Vest-L, S, M) are marked “Below_Average” with negative YoY change
+
+📈 Product-Level Performance
+- Top Performers:
+  - Mountain-200 Black, 42: $945,540 in sales (+$602,619 YoY) → best overall performer
+  - Mountain-100 Black, 42: $202,500 — steady high performer
+  - Fender Set – Mountain: grew from 110 to 44,484 — excellent YoY surge
+- Underperformers:
+  - Classic Vest-L, M, S: Showing multi-year decline and “Below_Average” performance
+  - Bike Wash – Dissolver and Mountain Tire Tube showed negative YoY growth
+  - Mountain-100 Silver, 38–44: No change or decline — stagnant products
+
+📌 Business Strategy: 
+- Increase production and regional availability of models like Mountain-200 Black, 42 and Mountain-100 Black, 42 show excellent traction
+  - Consider launching new variants or premium versions of these bikes
+- Most clothing SKUs are underperforming (declining YoY, marked as “Below_Average”)
+- Conduct customer surveys to identify why clothing isn't converting (fit, style, pricing?)
+  - Bundle underperforming clothing with top accessories or bikes to move stock
+  - Consider seasonal or limited collections to reignite interest
+- Strong performers: Fender Set – Mountain, All-Purpose Bike Stand
+- Weak performers: Mountain Tire Tube (decline in 2014), Bike Wash – Dissolver
+  - Prioritize marketing and bundling high-performing accessories
+  - Evaluate utility and quality of low-performers; consider discontinuation or redesign
+    
+
 
