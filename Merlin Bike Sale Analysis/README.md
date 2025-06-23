@@ -191,7 +191,7 @@ Tables and Columns Used:
   - Top revenue comes from Mountain-400-W and Touring bikes. Prioritize these products in marketing, ensure high inventory, and consider new variants based on customer feedback
   - Cross-sell accessories: Helmets and tire tubes appear among high earner. Use bundling strategies (e.g., "Buy a bike, get 20% off a helmet") to boost AOV (average order value)
 
-7. Bottom % revenue products
+7. Bottom 5 revenue products
 
    ![](Bottom5revenueproducts.PNG)
 
@@ -210,6 +210,34 @@ Tables and Columns Used:
    📌 Business Strategy:
    - Items like Racing Socks and Patch Kits bring low revenue. Bundling them with premium products will lead to more sale
    - Run clearance sales.
-   - Offer as freebies in loyalty programs or minimum cart values.
+   - Offer as freebies in loyalty programs or minimum cart values
+     
+8. Monthly Sales Trend
 
- 
+   ![](MonthlySalescustomersquantity.PNG)
+
+  ```sql
+  SELECT FORMAT(order_date, 'yyyy-MMM') AS order_date,
+  SUM(sales_amount) AS total_sales,
+  COUNT(DISTINCT customer_key) AS total_customers,
+  SUM(quantity) AS total_quantity
+  FROM sales
+  WHERE MONTH(order_date) IS NOT NULL
+  GROUP BY FORMAT(order_date, 'yyyy-MMM')
+  ORDER BY FORMAT(order_date, 'yyyy-MMM');
+ ```
+
+  🔎 Insights: 
+  - Steady Growth: From Dec 2010 ($43K) to Dec 2012 ($24K), sales have grown over 13x—showing a solid upward trend in business performance.
+  - Customer Base Expansion: Customer count increased from just 14 in Dec 2010 to 354 by Dec 2012, indicating strong market acquisition.
+  - Healthy Conversion: The total quantity ordered seems to scale linearly with customer count, suggesting that new customers are actively purchasing.
+  - Key Spikes: Major jumps were seen in:
+       - Aug 2011 ($614K): Likely a seasonal or promotional period
+       - Dec 2011 ($669K): Year-end sales boost
+       - Dec 2012 ($624K): Another strong December, signaling a recurring pattern in high year-end sales
+
+  📌 Business Strategy:
+ - Launch major seasonal campaigns or limited-time offers during the peak months.Introducing exclusive product launches in these peak months
+ - April 2012 (₹400K) and March 2012 (₹374K) showed noticeable dips. Use of targeted discounts, email nudges, or flash sales in low-performing months can improve the situation
+ - Implement referral programs to accelerate word-of-mouth and promote retargeting ads during high-traffic months to increase conversion
+
