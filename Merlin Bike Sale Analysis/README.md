@@ -212,7 +212,7 @@ Tables and Columns Used:
    - Run clearance sales.
    - Offer as freebies in loyalty programs or minimum cart values
      
-8. Monthly Sales Trend
+8. 📊 Monthly Sales Trend
 
    ![](MonthlySalescustomersquantity.PNG)
 
@@ -240,4 +240,32 @@ Tables and Columns Used:
  - Launch major seasonal campaigns or limited-time offers during the peak months.Introducing exclusive product launches in these peak months
  - April 2012 (₹400K) and March 2012 (₹374K) showed noticeable dips. Use of targeted discounts, email nudges, or flash sales in low-performing months can improve the situation
  - Implement referral programs to accelerate word-of-mouth and promote retargeting ads during high-traffic months to increase conversion
+
+9. 📈 Cummulative Sales Trend
+
+    ![](Cummulativesales.PNG)
+
+ ```sql
+ WITH t1 AS (
+ SELECT YEAR(order_date) AS year, MONTH(order_date) AS month,
+ SUM(sales_amount) AS total_sales FROM sales
+ WHERE MONTH(order_date) IS NOT NULL
+ GROUP BY YEAR(order_date), MONTH(order_date)
+ )
+ SELECT *, SUM(total_sales) OVER (PARTITION BY year ORDER BY year, month ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sales
+ FROM t1;
+```
+
+🔎 Insights: 
+- Consistent Uptrend: From $43K in Dec 2010 to over $1.77M by Apr 2012, cumulative sales show a clear upward growth, suggesting strong product-market fit
+- Acceleration Mid-2011: Sales began compounding significantly from Apr–Jul 2011, indicating possible successful marketing efforts or product upgrades
+- Sustained Momentum in 2012: Despite a dip in March 2012, Apr 2012 sales rebounded—showing resilience in customer demand
+- Cumulative sales rose from ₹43K in Dec 2010 to ₹1.77M in Apr 2012, reflecting a strong growth trajectory
+- The pace of cumulative sales growth slightly flattens in early 2012
+
+📌 Business Strategy: 
+- Scale winning strategies (ads, products, offers) that fueled the growth between 2010-12 by implementing automated marketing pipelines to support sustained demand generation
+- Introducing  new product lines or categories to re-spark growth early 2012 may improve the sale
+- Test new customer acquisition channels (influencer marketing, partnerships)
+
 
