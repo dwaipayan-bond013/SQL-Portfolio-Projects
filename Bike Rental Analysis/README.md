@@ -1,14 +1,11 @@
 # 🚴‍♂️ NextBike Bike Rentals – Database Documentation
+<p align="center">
+  <img src="NextBike.png" width="500px">
+</p>
 
-Welcome to the RideFlex Bike Rentals database project!  
-This system manages customers, bike inventory, rentals, and memberships to ensure smooth and efficient operations.
-
----
-
-## 📁 Project Overview
-
-RideFlex offers short-term and long-term bike rental services, along with flexible membership options.  
-This database supports core functions like customer management, bike tracking, rental billing, and membership subscriptions.
+## 📊 Overview
+NextBike Rentals is a modern and customer-centric bike rental platform designed to offer flexible, affordable, and accessible transportation solutions. Whether it's a one-hour ride around the city or a month-long adventure, NextBike enables users to choose from a wide range of bikes and tailored membership plans.
+This project aims to design a robust and scalable database system that efficiently handles core business operations such as bike inventory management, customer tracking, rental transactions, and subscription memberships.
 
 ---
 
@@ -104,15 +101,16 @@ Links a customer to a specific membership type.
 
 ---
 
-## 🧠 Potential Use Cases
+## 🧠 Key Analysis Areas
 
 - Track active and historical rentals
 - Calculate revenue by customer or time frame
 - Identify most/least rented bikes
 - Analyze membership profitability and retention
 - Determine availability and optimize bike utilization
-
 ---
+
+## 📈 Insights and Recommendations
 
 ## 🛠️ Next Steps
 
