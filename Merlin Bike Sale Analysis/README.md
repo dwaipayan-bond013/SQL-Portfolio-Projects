@@ -329,6 +329,94 @@ FROM t1;
 - Weak performers: Mountain Tire Tube (decline in 2014), Bike Wash – Dissolver
   - Prioritize marketing and bundling high-performing accessories
   - Evaluate utility and quality of low-performers; consider discontinuation or redesign
-    
+
+11. Part-to-Whole Sales by Category
+
+    ![](Wholeratio.PNG)
+
+```sql
+WITH t1 AS (
+  SELECT COALESCE(category, 'N/A') AS category,
+  COALESCE(SUM(sales_amount), 0) AS total_sales FROM products p
+  LEFT JOIN sales s ON p.product_key = s.product_key
+  GROUP BY p.category
+)
+SELECT *,
+SUM(total_sales) OVER () AS grand_sale,
+(total_sales * 100.0) / SUM(total_sales) OVER () AS per_share
+FROM t1;
+```
+
+🔎 Insights: 
+- Bikes are the primary revenue driver by a massive margin
+- Accessories and Clothing show very limited traction, but may have cross-selling potential
+
+📌 Business Strategy: 
+- Clothing and accessories contribute only ~3.5% combined. Bundling them with bike sales (e.g., free gloves with a mountain bike) can be a good move
+- Launch category-specific promotions to boost visibility
+- Review product quality, style, or pricing — consider revamp based on customer feedback
+
+12. Price and Product Segmentation
+
+    ![](ProductSegmentation.PNG)
+    ![](Customersegmentation.PNG)
+
+-- Price Segmentation
+```sql
+WITH product_segments AS (
+  SELECT product_key, product_name, cost,
+  CASE 
+    WHEN cost < 100 THEN 'Below 100'
+    WHEN cost BETWEEN 100 AND 500 THEN '100-500'
+    WHEN cost BETWEEN 500 AND 1000 THEN '500-1000'
+    ELSE 'Above 1000'
+  END AS cost_range
+  FROM products
+)
+SELECT cost_range, COUNT(DISTINCT product_key) AS total_products
+FROM product_segments
+GROUP BY cost_range
+ORDER BY total_products DESC;
+```
+-- Customer Segmentation
+
+```sql
+WITH customer_spending AS (
+  SELECT c.customer_key,
+  SUM(sales_amount) AS total_spend,
+  DATEDIFF(MONTH, MIN(order_date), MAX(order_date)) AS lifespan
+  FROM customers c
+  LEFT JOIN sales s ON c.customer_key = s.customer_key
+  GROUP BY c.customer_key
+)
+SELECT customer_category, COUNT(DISTINCT customer_key) AS total_customer FROM (
+  SELECT *,
+  CASE 
+    WHEN lifespan >= 12 AND total_spend > 5000 THEN 'VIP'
+    WHEN lifespan >= 12 AND total_spend <= 5000 THEN 'Regular'
+    ELSE 'New'
+  END AS customer_category
+  FROM customer_spending
+) t1
+GROUP BY customer_category;
+```
+
+🔎 Insights: 
+- New Customers dominate (84.5%), but likely with low loyalty or single-purchase behavior. VIPs & Regulars are much fewer (~16%), yet potentially represent repeat, high-value buyers
+- 66% of products are priced under $500, indicating a focus on budget offerings. Only ~16% of inventory is premium-priced (>$1000) – a potential gap for high-margin growth
+
+📌 Business Strategy: 
+- High-value VIP and regular customers are few but likely represent disproportionate revenue
+   - Launch exclusive VIP programs, early access sales, or loyalty rewards
+   - Create tailored bundles or add-ons (e.g., bike + accessories) to boost AOV (Average Order Value)
+   - Use targeted marketing emails to upsell mid- to high-priced products
+- New customers make up ~85% of users – likely casual or one-time buyers
+   - Offer first-purchase discounts or welcome bundles
+   - Guide them toward popular products via “Top Seller for Beginners” tags
+   - Use remarketing strategies (email, social media) to encourage repeat buys
+- Only 39 premium products (>$1000) exist — low for potentially high-LTV segments like VIPs
+   - Expand the premium product portfolio (e.g., performance bikes, exclusive gear)
+   - Bundle high-cost items with services (warranty, upgrades) to justify pricing
+   - Cross-promote with accessories or seasonal packages
 
 
