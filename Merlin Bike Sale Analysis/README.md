@@ -6,6 +6,7 @@
 ## 📊 Overview
 This project involves an in-depth analysis of Merlin's bike sales data over a span of 4 years. The goal is to uncover actionable insights around product performance, customer segmentation, regional trends, and revenue distribution to help drive better decision-making across marketing, sales, and inventory.
 
+---
 ## 🧱 Database Schema
 Tables and Columns Used:
 
@@ -16,6 +17,7 @@ Tables and Columns Used:
 - Sales 📈:
 `order_number`, `product_key`, `customer_key`, `order_date`, `shipping_date`, `due_date`, `sales_amount`, `quantity`, `price`
 
+---
 ## Entity Relationship Diagram (ERD)
 ![](ERD.PNG)
 
@@ -32,6 +34,7 @@ Tables and Columns Used:
    - `customer_key`: Foreign key referencing customer_key in the Customers table. This links each sale to a specific customer
    - `product_key`: Foreign key referencing product_key in the Products table. This links each sale to a specific product
 
+---
 ## 📊 Key Analysis Areas
 - Customer Lifetime Value (CLTV): Identify customers who contribute the most to revenue
 - Product Profitability: Compare product costs vs. sales to identify high-margin items
@@ -40,6 +43,7 @@ Tables and Columns Used:
 - Order Fulfillment: Track shipping and due dates for delay analysis
 - Market Expansion Opportunities: Discover underperforming countries or categories
 
+---
 ## 📈 Insights and Recommendations
 
 1. KPI Reporting
@@ -525,3 +529,129 @@ FROM Customer_Aggregation;
 - Incentivize 2nd purchase with “Buy Again & Save” coupons
 - Offer Premium customers with exclusive early access to products, limited drops, or loyalty tiers
 - Set up email onboarding flows with product education, usage tips, and customer stories
+
+14. Products Analysis Report
+
+    ![](ProductAnalysis.PNG)
+
+```sql
+WITH Product_Base_Query AS (
+    /*---------------------------------------------------------------------------
+    1) Base Query: Retrieving core columns from fact_sales and dim_products
+    ---------------------------------------------------------------------------*/
+    SELECT 
+        p.product_key,
+        product_name,
+        category,
+        subcategory,
+        cost,
+        order_number,
+        order_date,
+        customer_key,
+        sales_amount,
+        quantity
+    FROM products p
+    LEFT JOIN sales s ON p.product_key = s.product_key
+    WHERE order_date IS NOT NULL
+),
+
+Product_Aggregation AS (
+    /*---------------------------------------------------------------------------
+    2) Product Aggregations: Summarizing key metrics at the product level
+    ---------------------------------------------------------------------------*/
+    SELECT 
+        product_key,
+        product_name,
+        category,
+        subcategory,
+        cost,
+        COUNT(DISTINCT order_number) AS total_orders,
+        MAX(order_date) AS last_sale_date,
+        SUM(sales_amount) AS total_sales,
+        SUM(quantity) AS total_quantity,
+        COUNT(DISTINCT customer_key) AS total_customers,
+        DATEDIFF(MONTH, MIN(order_date), MAX(order_date)) AS lifespan,
+        ROUND(AVG(CAST(sales_amount AS FLOAT) / NULLIF(quantity, 0)), 1) AS avg_selling_price
+    FROM Product_Base_Query
+    GROUP BY product_key, product_name, category, subcategory, cost
+)
+
+SELECT 
+    product_key,
+    product_name,
+    category,
+    subcategory,
+    cost,
+    last_sale_date,
+    DATEDIFF(MONTH, last_sale_date, GETDATE()) AS recency_in_months,
+    CASE
+        WHEN total_sales > 50000 THEN 'High-Performer'
+        WHEN total_sales >= 10000 THEN 'Mid-Range'
+        ELSE 'Low-Performer'
+    END AS product_segment,
+    lifespan,
+    total_orders,
+    total_sales,
+    total_quantity,
+    total_customers,
+    avg_selling_price,
+    CASE 
+        WHEN total_orders = 0 THEN 0
+        ELSE ROUND(total_sales / total_orders,2)
+    END AS avg_order_revenue,
+    CASE
+        WHEN lifespan = 0 THEN total_sales
+        ELSE ROUND(total_sales / lifespan,2)
+    END AS avg_monthly_revenue
+FROM Product_Aggregation;
+```
+
+🔎 Insights: 
+- 🔝 Touring-1000 Yellow-46 made $4.1M in total sales with $37.3K/month on average
+- Road-250 Red-44 and Road-350-W Yellow-48 each contribute $700K+, with steady sales
+- 💼 High-performing products have long lifespans (20–24 months), showing sustained demand and customer trust
+- 💰 Premium bikes sell less frequently but at high average order values, like Mountain-100 Silver-38 has an average selling price of $3,400 with niche appeal
+- 🔁 Mid-range accessories and clothing perform steadily:
+   - Items like Hitch Rack - 4-Bike and Short-Sleeve Jerseys bring in $1.8K–$3.3K/month consistently
+- ⚠️ Some products are outdated or inactive like, Sport-100 Helmet, Touring-3000 Blue-54 have not sold in over 137 months, despite existing order history
+
+📌 Business Strategy: 
+- Increase marketing and inventory for Touring-1000 Yellow-46, Road-250 Red-44, Road-350-W Yellow-48.
+   - Feature them in homepage banners and seasonal campaigns
+   - Offer 0% EMI or financing to encourage high-ticket purchases
+- Combine Hitch Rack, Helmets, and Jerseys with top bike models by creating starter kits for new buyers to raise average order value
+- Retire or discount products with zero sales in 130+ months
+- Reinvest shelf space in new or trending models
+
+## 🛠️ SQL Techniques Used
+
+- **Window Functions**: `LAG()`, `DENSE_RANK()`, `AVG()`, etc.
+- **Joins**: `INNER`, `LEFT JOIN` across 5+ tables
+- **Aggregates**: `SUM()`, `COUNT()`, `DATEDIFF()`
+- **Case Logic**: `CASE WHEN` used for dynamic labels and segmentation
+- **Time Functions**: `DATEPART`, `DATENAME`, `MONTH()`, `CAST()`
+
+---
+
+## 🔑 Key Takeaways & Strategic Actions
+
+### 📦 Products:
+- High-Value Products Drive Revenue: A few premium bikes (e.g., Touring-1000 Yellow-46, Road-250 Red-44) contribute over $4M and $700K in revenue respectively
+- Mid-Range Products Have Consistent Demand: Accessories like Hitch Rack and Jerseys show stable monthly sales of $1.8K–$3.3K
+- Premium Products Have Niche but Profitable Appeal: Products like Mountain-100 Silver-38 show low volume but high unit price (avg. $3,400 per sale)
+- Aging Inventory Detected: Several products (e.g., Sport-100 Helmet, Touring-3000 Blue) haven’t sold in 130+ months, signaling outdated stock or irrelevant listings
+
+### 🧑‍🤝‍🧑 Customers
+- Customer Base is New-Centric: Over 80% of customers are tagged as "New", but most haven’t reordered (high time_since_last_order values)
+- VIP and Regular Customers Are Underrepresented: VIPs (1,655) and Regulars (2,198) form a small portion of the base compared to New customers (14,631)
+- High Spenders Are Often Older (Age > 50): Many high average monthly spenders are in the “Greater than 50” age group
+- Order Frequency is Low Across Most Segments: Even high-value customers show low total_orders and lifespan, implying weak retention
+
+---
+
+## 🧾 Conclusion
+
+The Merlin Sales Analysis gives a clear and comprehensive picture of a brand with strong potential—but uneven execution. Merlin’s success is driven by a few high-performing bikes, like the *Touring-1000 Yellow-46* and *Road-250 Red-44*, which generate the maximum share of revenue and demonstrate  customer demand. Yet, surrounding these top performers is a long list of underutilized products—some stagnant for over a decade—suggesting an urgent need for catalog optimization. On the customer front, while Merlin has done well in attracting new buyers, the retention gap is significant. Most customers make a single purchase and never return, even though a smaller segment of VIP and older customers show strong loyalty, higher spend, and longer engagement lifespans. This pattern signals a crucial opportunity: by deepening relationships with high-value customers and re-engaging new ones with timely, personalized outreach tecgniques, Merlin can dramatically improve customer lifetime value. Meanwhile, bundling high-performing bikes with accessories, phasing out inactive SKUs, and strategically pricing mid-range products will ensure a more profitable product portfolio. Ultimately, this analysis isn’t just about numbers—it’s a call to build a more customer-centric, data-informed, and agile business strategy. 
+
+
+
