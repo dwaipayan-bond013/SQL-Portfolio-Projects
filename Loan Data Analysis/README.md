@@ -178,8 +178,79 @@ To ensure repayment consistency, offer auto-pay options, late fee warnings, and 
 
 6. Average DTI
 
-   ![](
+   ![](AvgDTI.PNG)
 
+```sql
+SELECT ROUND(AVG(dti) * 100.0,2) AS avg_dti FROM loan;
+```
+
+7. Percentage of good loan
+
+   ![](goodloanpercent.PNG)
+
+```sql
+SELECT 
+  ROUND(SUM(CASE WHEN loan_status IN ('Fully Paid', 'Current') THEN 1 ELSE 0 END) * 100.0 / (SELECT COUNT(*) FROM loan),2)
+ AS percentage_good_loan FROM loan;
+```
+8. Amount of good loan disbursed and paid back
+
+   ![](goodloandisbursed.PNG)
+   ![](goodloanpaidback.PNG)
+   
+Good loan disbursed
+```sql
+SELECT FORMAT(SUM(loan_amount),'N0') AS good_loan_amt_disbursed FROM loan
+WHERE loan_status IN ('Fully Paid', 'Current');
+```
+Good loan paid back
+```sql
+SELECT FORMAT(SUM(total_payment),'N0') AS good_loan_amt_paid FROM loan
+WHERE loan_status IN ('Fully Paid', 'Current');
+```
+
+Business Insights:
+- Positive Return from Good Loans
+- Interest Earned = $435,786,170 − $370,224,850 = $65,561,320
+- This implies that the organization earned over ₹65.56 million from interest alone on good loans
+
+Business Strategy:
+- Increase lending to similar borrower profiles to boost profitability
+- Offering loyalty benefits or interest rate incentives for early or full repayments will be agood move
+
+9. Amount of bad loan disbursed
+
+   ![](badloandisbursed.PNG)
+   ![](badloanpaid.PNG)
+
+Bad loan disbursed
+```sql
+SELECT FORMAT(SUM(loan_amount),'N0') AS bad_loan_amt_disbursed FROM loan
+WHERE loan_status = 'Charged Off';
+```
+Bad loan paid back
+```sql
+SELECT FORMAT(SUM(total_payment),'N0') AS bad_loan_amt_paid FROM loan
+WHERE loan_status = 'Charged Off';
+```
+
+Business Insights:
+- $65.53M disbursed but only $37.28M recovered → Loss of $28.25M
+- Recovery Rate: Only 56.9%, which indicates: Weak credit underwriting for bad loans
+- Potential issues with collections, borrower quality, or fraud
+- Despite the bad loan losses, the portfolio remains overall profitable, due to the strength of good loans
+
+Business Strategy:
+- Employ aggressive recovery mechanisms: legal, settlements, restructuring
+- Consider insurance coverage or partnerships with collection agencies
+- Segment loan performance by geography, borrower type, industry, etc
+
+10. 
+
+
+
+
+   
 
 📈 Next Step (Optional)
 Would you like me to create a repayment-to-disbursement ratio analysis or a combined dashboard for 2021 financial health?
