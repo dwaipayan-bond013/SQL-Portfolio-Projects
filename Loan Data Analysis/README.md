@@ -402,6 +402,86 @@ Business Strategy:
 5. Flexible Loan Products
    - Offer customizable terms (e.g., 48 months) to appeal to those undecided between 3 and 5 years
 
+14. Service tenure wise loan analysis
+
+    ![](serivcetenurewiseanalysis.PNG)
+
+```sql
+SELECT 
+  emp_length AS employment_tenure,
+  COUNT(id) AS total_loan_applications,
+  SUM(loan_amount) AS total_funded_amount,
+  SUM(total_payment) AS total_amount_received
+FROM loan
+GROUP BY emp_length
+ORDER BY emp_length;
+```
+
+Business Insights:
+- 10+ years tenure accounts for ~21% of all applications and the highest total funding and return. Indicates strong borrower trust in lending, potentially due to income stability.
+- Shorter Tenure Applicants are Still Significant, <1-year tenure makes up ~11% of applicants
+- Average funded and received amounts increase with tenure
+- Longer tenured employees (>5 years) yield higher return per applicant (funded vs. received)
+  - Example: 10+ years has ~$1,096 more received per applicant than funded
+
+Business Strategy:
+- Focus marketing on borrowers with 5+ years of tenure, especially 10+ years
+- Use tiered offers—lower interest rates or higher eligibility for long-tenured individuals due to lower risk
+- While substantial in volume, <1-year employees may have less stable income.
+  - Limit loan amounts
+  - Require co-signers or additional proof of income
+  - Offer secured loan options
+- Offer increasing loan sizes and reduced interest rates with each tier (e.g., <1 year, 1–5, 5–10, 10+). Helps in employment loyalty and reduces churn risk
+- Customize emails/SMS/app push based on borrower tenure
+
+15. Purpose-wise Loan Analysis
+
+    ![](purposewiseloananalysis.PNG)
+
+```sql
+SELECT 
+  purpose AS loan_purpose,
+  COUNT(id) AS total_loan_applications,
+  SUM(loan_amount) AS total_funded_amount,
+  SUM(total_payment) AS total_amount_received
+FROM loan
+GROUP BY purpose
+ORDER BY total_funded_amount DESC,total_amount_received DESC;
+```
+
+Business Insights:
+- Debt Consolidation Dominates
+  - Most popular category (18,214 applications)
+  - Highest funded and received amounts ($232.5M & $253.8M)
+- Small Business and House loans have highest per-loan value (~$13K+), despite lower volume.Indicates demand for larger, high-risk, high-reward products
+- Renewable Energy loans are few (94 apps) but have above-average return per loan
+- Generic categories like “Other” and “Major Purchase” show decent volume but lower avg. return per loan.
+
+Business Strategy:
+- Introduce premium plans for high-credit-score customers (e.g., lower APR, faster processing).
+- Offer loan insurance or tie-ups with business support services (e.g., accounting tools).
+- Upsell in Lifestyle Categories, Add premium features: “Wedding Loan + Gift Registry Bonus,” or “Car Loan + Insurance Deal.”
+- Promote Green Loans Aggressively
+  - Renewable energy has potential for high impact and brand reputation boost
+  - Launch eco-loan campaigns with governments/NGOs
+  - Offer cashback or subsidy-linked schemes
+- Reassess “Other” and “Major Purchase” categories
+- Subdivide into specific needs like “Furniture,” “Electronics,” etc., for better targeting
+
+16. Home Ownership-wise Loan Analysis
+
+    ![](homeownershipwiseanalysis.PNG)
+
+```sql
+SELECT 
+  home_ownership AS home_ownership,
+  COUNT(id) AS total_loan_applications,
+  SUM(loan_amount) AS total_funded_amount,
+  SUM(total_payment) AS total_amount_received
+FROM loan
+GROUP BY home_ownership
+ORDER BY home_ownership;
+```
 
 
 
