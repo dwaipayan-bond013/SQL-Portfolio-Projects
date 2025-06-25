@@ -482,7 +482,31 @@ FROM loan
 GROUP BY home_ownership
 ORDER BY home_ownership;
 ```
+Business Insights
+- Mortgage & Rent Categories Dominate
+  - Together they represent ~94% of all applications
+  - Mortgage holders receive the highest total loan amount, and also show the highest avg. return per applicant
+  - Highest average funded and received amounts per borrower
+  - Indicates better creditworthiness and lower risk profile due to asset backing
+  - Renters Apply More, But Borrow Less
+  - Highest number of applications (18,439), but ~$2.7K less per loan than mortgage holders
+- Only 2,838 applications from those who own their homes outright. But they still show decent average loan sizes (~$10.4K–11.1K)
+- Very few entries—likely noise or special cases
 
+Business Strategy:
+- Develop premium plans or pre-approved offers for mortgage customers.
+- Consider refinancing offers, home improvement bundles, or debt consolidation tie-ins.
+- Offer more flexible terms for renters with:
+  - Higher credit scores
+  - Verified income or employment
+  - Introduce guarantor-backed or co-signed loans to reduce default risk
+- Encourage homeowners to leverage equity through secured loans or home-based financing. Highlight benefits like lower interest or longer terms
+- “NONE” and “OTHER” should be cleaned, reviewed for data integrity or mapped to valid categories
+
+17. Grade-wise Loan Analysis by Purpose
+
+    
+  
 
 
 
