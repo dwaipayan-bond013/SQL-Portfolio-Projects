@@ -9,7 +9,7 @@ In this repository, you will find a variety of SQL projects, including:
    
 2. 🚲 [**Marlin Bike Sale Analysis**](https://github.com/dwaipayan-bond013/SQL-Projects/tree/main/Merlin%20Bike%20Sale%20Analysis): This project revolves around analyzing fictional sales data for Marlin Bikes, a company selling bicycles and accessories through various stores and channels. Using SQL, the analysis focuses on identifying revenue trends, customer segments, product popularity, and geographic sales distribution to support strategic decision-making.
    
-3. 💳 **Loan Data Analysis**: The  project will cover structured SQL queries to perform exploratory and descriptive analysis on a loan portfolio. The goal is to extract key insights around loan approval patterns, default risk, repayment behavior, and demographic trends — all crucial for credit risk management and lending strategy.
+3. 💳 [**Loan Data Analysis**](https://github.com/dwaipayan-bond013/SQL-Projects/tree/main/Loan%20Data%20Analysis): The  project will cover structured SQL queries to perform exploratory and descriptive analysis on a loan portfolio. The goal is to extract key insights around loan approval patterns, default risk, repayment behavior, and demographic trends — all crucial for credit risk management and lending strategy.
    
 4. 🏍 **Bike Rental Analysis**: This SQL project focuses on analyzing a car rental company's operations using structured query language. The goal is to uncover meaningful business insights by examining rental behavior, customer trends, vehicle performance, and revenue generation over time.
 
