@@ -279,6 +279,44 @@ Business strategy:
    - Promote products tailored for low-DTI, low-risk customers
    - Offer incentives for early repayment or loyalty programs to retain strong borrowers
 
+11. Moanthwise loan analysis
+
+    ![](monthwiseloananalysis.PNG)
+
+```sql
+SELECT 
+  MONTH(issue_date) AS month_number,
+  DATENAME(MONTH, issue_date) AS month_name,
+  COUNT(id) AS total_loan_applications,
+  FORMAT(SUM(loan_amount),'N0') AS total_funded_amount,
+  FORMAT(SUM(total_payment),'N0') AS total_amount_received
+FROM loan
+GROUP BY MONTH(issue_date), DATENAME(MONTH, issue_date)
+ORDER BY MONTH(issue_date);
+```
+
+Business Insights:
+- Loan Applications grow steadily from January (2,332) to December (4,314).That’s an 85% increase in applications over the year.
+- Funded Amounts rise from ~$25M in January to ~$54M in December.Amount Recovered grows from ~$27.6M to ~$58M over the same period.This shows strong capital deployment and repayment traction.
+- Top Performing Months (in Amount Received)
+   - December: $58.07M (Highest)
+   - November: $50.13M
+   - October: $49.40M
+ Indicates Q4 is the peak quarter for both disbursals and repayments
+- Each month, the amount received exceeds amount funded, which signals: Healthy interest accrual, Consistent repayment behavior, Effective loan management practices
+
+Business Strategy:
+1. Capitalize on Year-End Growth
+   - Targeted Marketing: Increase outreach, digital campaigns, and limited-period offers in Q4 (Oct–Dec)
+   - Special Products: Introduce short-term or festive loans to ride the seasonal demand
+2. Application volumes dip in Feb and Mar. 
+   - Introducing EMI holidays, interest rebates, or loyalty offers during slower periods to boost uptake
+   - Campaigns targeting students, entrepreneurs, or salaried professionals pre-tax season
+3. Analyze Regional Trends Behind Peaks
+   - Perform geographic analysis of Q4 spikes — if concentrated in certain regions, deepen partnerships or presence in those areas
+
+12. 
+
 
 
 
