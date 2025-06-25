@@ -597,7 +597,7 @@ GROUP BY purpose
 ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
 ```
 
-- Business Insights:
+Business Insights:
 - Debt Consolidation dominates across all grades (A–G)
   - Grade A: 3753 apps; Grade G: 170 apps.
   - High demand and approval rate imply it's a core product offering.
@@ -616,7 +616,7 @@ ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
 - Renewable Energy, Educational, and Vacation loans are consistently low across all grades, both in volume and funding
 - Applications drop drastically after Grade D
 
-- Business Strategy:
+Business Strategy:
 - Expand Debt Consolidation Offerings
 - Consider creating tailored debt consolidation products for different risk segments (A–C) as it's consistently the highest performing purpose
 - Offer refinancing options for Grades A–B with incentives (e.g., rate discounts for early repayments)
@@ -627,54 +627,36 @@ ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
 - Sharp decline in funded amounts implies lower trust or higher default risk. Offer only secured or cosigned loans in Grades F–G
 - Grade C still has a strong loan volume. May offer a balance between risk and return. Targeted marketing to capture this mid-tier segment might be a viable option
 
-
-
-    
-  
-
-
-
-
-
-
-   
-
-📈 Next Step (Optional)
-Would you like me to create a repayment-to-disbursement ratio analysis or a combined dashboard for 2021 financial health?
-
-
-
-
-
-
-
-
-
-
-
-
-
+📈 Next Step
+Will create a Power BI dashboard to visulaize the business insights for clear understanding
+---
 
 ## 🛠️ Tools & Technologies
-
-- **SQL** (MySQL / PostgreSQL / SQL Server)
-- **DBMS**: Any compatible RDBMS for running SQL queries
-- **Visualization** (optional): Power BI / Tableau / Excel
+- **Window Functions**: `LAG()`, `DENSE_RANK()`, `AVG()`, etc.
+- **Joins**: `INNER`, `LEFT JOIN` across 5+ tables
+- **Aggregates**: `SUM()`, `COUNT()`, `DATEDIFF()`
+- **Case Logic**: `CASE WHEN` used for dynamic labels and segmentation
+- **Time Functions**: `DATEPART`, `DATENAME`, `MONTH()`, `CAST()`
 
 ---
 
-## 📂 Project Structure
+## Key takeaways and strategic actions
+- Fully Paid Loans are the most profitable and lowest risk
+- Charged-Off Loans have high default losses despite higher interest.
+- Loan Demand Peaks in Q4 — October to December see the highest applications and recoveries.
+- California, Florida, Georgia lead in volume and repayment.
+- Underpenetrated States like Alaska, Iowa, and Hawaii show minimal activity.
+- Debt Consolidation is the Top Purpose Across All Grades
+- Highest volume and funding in every grade, especially Grades A–C.
+- Credit Card and Home Improvement Loans are Strong in Grades A–C
+- Loan Volume and Funding Decline Steeply After Grade D. Indicates higher credit risk and reduced lender confidence in Grades E–G.
+- Grade C is a Strategic Middle Ground. Maintains decent volume and funding—offers a balance between growth and manageable risk.
+- Need for Risk Management in Lower Grades (E–G)
+---
 
-```bash
-loan-data-analysis/
-│
-├── README.md                     # Project documentation
-├── schema.sql                    # Table structure (if available)
-├── queries/
-│   ├── loan_status_analysis.sql
-│   ├── income_vs_default.sql
-│   ├── grade_distribution.sql
-│   └── monthly_loan_issuance.sql
-└── reports/
-    └── loan_analysis_summary.pdf
+## Conclusion
+The loan analysis reveals that the business performs best with low-risk borrowers, particularly those with lower DTI ratios and a history of full repayments. Q4 months (Oct–Dec) and states like California and Florida drive the majority of loan volume and repayment success. However, charged-off loans and high-DTI profiles pose significant risk despite higher interest rates. There is untapped potential in low-volume states, which can be explored strategically.
+
+To maximize profitability, the company should focus on expanding in high-performing regions, tightening credit policies for risky profiles, and leveraging seasonal demand trends through targeted campaigns.Debt Consolidation is the Top Purpose Across All Grades. Highest volume and funding in every grade, especially Grades A–C.
+
 
