@@ -505,6 +505,129 @@ Business Strategy:
 
 17. Grade-wise Loan Analysis by Purpose
 
+    - Grade A Loan 
+       - ![](GradeAloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'A'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade B Loan 
+       - ![](GradeBloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'B'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade C Loan 
+       - ![](GradeCloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'C'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade D Loan 
+       - ![](GradeDloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'D'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade E Loan 
+       - ![](GradeEloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'E'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade F Loan 
+       - ![](GradeFloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'F'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+  - Grade G Loan 
+       - ![](GradeGloan.PNG)
+```sql
+SELECT 
+purpose AS purpose,
+COUNT(id) AS total_loan_applications,
+SUM(loan_amount) AS total_funded_amount,
+SUM(total_payment) AS total_amount_received
+FROM loan
+WHERE grade = 'A'
+GROUP BY purpose
+ORDER BY Total_Funded_Amount DESC,Total_Amount_Received DESC;
+```
+
+- Business Insights:
+- Debt Consolidation dominates across all grades (A–G)
+  - Grade A: 3753 apps; Grade G: 170 apps.
+  - High demand and approval rate imply it's a core product offering.
+- Top Funded Purposes (Funded Amount + Volume)
+  - Grade A & B: Strong funding for Debt Consolidation, Credit Card, Home Improvement
+  - Grade C & D: Still dominated by Debt Consolidation, but fund amounts begin to reduce
+  - Grade E–G: Sharp drop in both applications and funded amounts across all purposes
+- Funding decreases progressively from A to G, indicating tighter controls on lower credit grades.
+  - Grade A: $12.6M funded
+  - Grade B: $18.2M
+  - Grade C: $12.4M
+  - Grade D: $7.9M
+  - Grade E: $4.7M
+  - Grade F: $2.1M
+  - Grade G: $722K
+- Renewable Energy, Educational, and Vacation loans are consistently low across all grades, both in volume and funding
+- Applications drop drastically after Grade D
+
+- Business Strategy:
+- Expand Debt Consolidation Offerings
+- Consider creating tailored debt consolidation products for different risk segments (A–C) as it's consistently the highest performing purpose
+- Offer refinancing options for Grades A–B with incentives (e.g., rate discounts for early repayments)
+- Promote Credit Card & Home Improvement Loans: These purposes are strong performers in Grades A–C
+- Consider cross-marketing to high-score individuals (Grade A) for home equity-backed options
+- Vacation, Renewable Energy, and Educational loans show minimal demand or ROI
+- Consider discontinuing or restructuring them unless they serve a strategic purpose (e.g., ESG or community development)
+- Sharp decline in funded amounts implies lower trust or higher default risk. Offer only secured or cosigned loans in Grades F–G
+- Grade C still has a strong loan volume. May offer a balance between risk and return. Targeted marketing to capture this mid-tier segment might be a viable option
+
+
 
     
   
