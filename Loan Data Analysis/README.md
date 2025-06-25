@@ -245,7 +245,41 @@ Business Strategy:
 - Consider insurance coverage or partnerships with collection agencies
 - Segment loan performance by geography, borrower type, industry, etc
 
-10. 
+10. Loan status wise analysis
+
+    ![](loanstatus.PNG)
+
+```sql
+SELECT loan_status, 
+COUNT(id) AS total_loan_application,
+FORMAT(SUM(loan_amount),'N0') AS total_funded_amount,
+FORMAT(SUM(total_payment),'N0') AS total_amount_received,
+ROUND(AVG(int_rate) * 100.0,2) AS avg_interest_rate,
+ROUND(AVG(dti) * 100.0,2) AS avg_dti_score
+FROM loan
+GROUP BY loan_status;
+```
+
+Business Insights:
+- Fully paid loans are profitable and well-managed. The lower average DTI (Debt-to-Income) suggests stronger financial profiles among these borrowers
+- Even though charged-off loans have higher interest rates, the losses are more than potential returns. Borrowers in this segment likely had weaker repayment ability and insufficient screening
+- These are high-risk, high-interest loans. Their repayment behavior is yet to be fully seen, but they demand close monitoring due to high DTI
+
+Business strategy:
+1. Tighten Credit Underwriting for High DTI Applicants
+   - Set stricter approval rules or higher documentation thresholds for applicants with DTI > 13.5
+   - Consider using tiered interest rates based on DTI and credit score to manage risk more granularly
+2. Revise Pricing Strategy for Charged-Off Segments
+   - Reassess whether 13.88% interest adequately compensates for ~43% capital loss.
+   - Explore risk-based pricing models or require collateral/security for high-risk profiles.
+3. Monitor Current Loans Aggressively
+   - Flag and proactively track borrowers with DTI > 14 and interest > 14%
+   - Set up early-warning systems for payment delays or behavioral anomalies
+4. Invest More in Segments Similar to Fully Paid Borrowers
+   - Promote products tailored for low-DTI, low-risk customers
+   - Offer incentives for early repayment or loyalty programs to retain strong borrowers
+
+
 
 
 
