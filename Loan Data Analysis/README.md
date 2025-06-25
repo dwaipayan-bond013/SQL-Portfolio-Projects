@@ -315,7 +315,94 @@ Business Strategy:
 3. Analyze Regional Trends Behind Peaks
    - Perform geographic analysis of Q4 spikes — if concentrated in certain regions, deepen partnerships or presence in those areas
 
-12. 
+12. Statewise loan analysis
+
+    ![](statewiseanalysis.PNG)
+
+```sql
+SELECT 
+  address_state AS state,
+  COUNT(id) AS total_loan_applications,
+  FORMAT(SUM(loan_amount),'N0') AS total_funded_amount,
+  FORMAT(SUM(total_payment),'N0') AS total_amount_received
+FROM loan
+GROUP BY address_state
+ORDER BY address_state;
+```
+
+Business Insights:
+- California (CA) leads significantly in all metrics:
+  - Applications: 6,894
+  - Funded: $78.48M
+  - Received: $83.90M
+- Florida (FL), Texas (TX), New York (NY), and Illinois (IL) also show high activity and funding:
+  - TX: ~$31.2M funded, ~$34.8M received
+  - NY: ~$15.48M funded, ~$16.7M received
+  - FL: ~$30M funded, ~$31.6M received
+  - IL: ~$17.1M funded, ~$18.8M received
+- Some states receive more than they are initially funded:
+  - FL: Receives ~$1.6M more than funded
+  - IL, NY, MI, WA, PA, etc., show similar patterns
+  - Indicates positive interest or strong post-funding performance
+- MT, VT, WY, AK, RI, ND, SD, DC have very low loan application volumes
+- States like NY, FL, IL, PA yield high total received amounts relative to applications.
+  - Example: IL → 1486 apps → $18.9M received
+  - High average return per customer: ~$12.7K/application
+
+Business Strategy:
+- Expand marketing efforts in CA, FL, TX, NY, IL, PA as they already show strong demand and good ROI
+- Plan strategies to segments in these states for upselling or premium financial products
+- Launch awareness campaigns in WY, VT, SD, ND, MT, RI
+- Investigate why CA, TX, FL, IL, NY outperform others
+- Track funding efficiency: prioritize states with higher “amount received vs funded” ratios
+- In states with lower volumes but decent returns (e.g., OR, CT, MN), test new loan types: Micro-loans, educational loans, green financing
+
+13. Term wise loan analysis
+
+    ![](termwiseanalysis.PNG)
+
+```sql
+SELECT 
+  term,
+  FORMAT(COUNT(id),'N0') AS total_loan_applications,
+  FORMAT(SUM(loan_amount),'N0') AS total_funded_amount,
+  FORMAT(SUM(total_payment),'N0') AS total_amount_received
+FROM loan
+GROUP BY term
+ORDER BY term;
+```
+
+Business Insights:
+- 36-Month Loans Are More Popular and yield Higher Overall Revenue 
+  - Nearly 3x the number of applications for 36-month term loans compared to 60-month ones
+  - Indicates a preference for short-term debt—possibly due to faster payoff, less interest, or lower perceived risk
+  - Despite smaller average size, the 36-month loan category has a greater total return
+  - ~$21.6M more received than funded, indicating positive net gain
+- Though fewer in number, 60-month loans are larger per applicant:
+  - ~60% more funded per application
+  - Shows that larger loans are typically taken with longer terms, likely to reduce monthly installments
+- 36-Month Efficiency (Amount Received vs Funded)
+  - 36-month: 8% gain (294.7M / 273M)
+  - 60-month: 9.6% gain (178.3M / 162.7M)
+- Slightly better returns per dollar funded on longer-term loans
+
+Business Strategy:
+1. Promote 60-Month Loans to High-Value Borrowers
+   - Target business owners or professionals who need larger amounts and can handle long-term commitments
+   - Bundle offers with financial advisory to reduce default risks
+2. Leverage 36-Month Popularity in Marketing
+   - Push 36-month loans as the “safe, smart” choice for quick repayments and lower interest burden
+   - Use testimonials and case studies to build trust and urgency
+3. Introduce Tiered Incentives
+   - Offer interest discounts for early repayments or bundled services
+   - Encourage 60-month borrowers to pay off earlier if they can afford it—this reduces default risk and improves cash flow
+4. Analyze Default/Delinquency Trends (if available)
+   - If delinquency rates are higher for 60-month loans, introduce stricter underwriting criteria
+   - If both terms perform similarly in risk, expand 60-month availability more confidently
+5. Flexible Loan Products
+   - Offer customizable terms (e.g., 48 months) to appeal to those undecided between 3 and 5 years
+
+
 
 
 
