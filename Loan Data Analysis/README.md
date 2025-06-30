@@ -15,8 +15,8 @@ This project involves analyzing loan data stored in a relational database using 
 
 The analysis is performed on a single table with the following columns:
 
-| Column Name             | Description                                                   |
-|-------------------------|---------------------------------------------------------------|
+| Column Name             | Description                                                  |
+|-------------------------|--------------------------------------------------------------|
 | `customer_id`           | Unique identifier for each customer                          |
 | `address_state`         | U.S. state where the borrower resides                        |
 | `application_type`      | Indicates whether the application is individual or joint     |
