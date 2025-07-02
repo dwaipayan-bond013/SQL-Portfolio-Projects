@@ -2,10 +2,13 @@
 
 ![alt text](zomato-sc-1.jpg)
 
-## 📌 Overview
-This SQL project explores the sales, delivery, and customer behavior data of  Zomato. It includes 20 advanced SQL queries to uncover performance drivers, customer segmentation, item trends, and operational insights.
+## 📈 Business Problem
+Zomato is a leading global food delivery and restaurant discovery platform that connects millions of customers with a wide range of restaurants across various locations. With a focus on providing seamless food delivery services, Zomato aims to enhance customer experiences and improve restaurant business outcomes.
 
----
+Zomato faces challenges in optimizing its sales, customer engagement, and operational efficiency. Despite having a large user base, inconsistencies in customer behavior, order frequency, and delivery performance across regions indicate the need for targeted strategies to maximize revenue, improve market penetration, and enhance overall operational effectiveness.
+
+The challenges faced by Zomato are addressed through a series of advanced SQL queries. These queries provide insights into key areas such as customer segmentation, order trends, restaurant performance, and delivery efficiency. By analyzing customer behavior, product popularity, and monthly sales patterns, the SQL queries help identify high-value customers, peak order times, and underperforming restaurants. Additionally, the use of aggregation, ranking, and window functions enables Zomato to optimize operations, reduce delivery time variability, and improve customer retention through targeted strategies.
+
 
 ## 🧩 Database Schema
 
@@ -14,8 +17,6 @@ This SQL project explores the sales, delivery, and customer behavior data of  Zo
 - **Deliveries**: `DeliveryID`, `OrderID`, `RiderID`, `Pickup_Time`, `Delivery_Time`, `Distance_covered`, `Tip`  
 - **Restaurants**: `Restaurant_ID`, `DishName`, `Cuisine`, `Location`, `Rating`,`Contact`  
 - **Riders**: `RiderID`, `Name`, `Vehicle`, `Rating`,`Phone`
-
----
 
 ## Entity Relationship Diagram (ERD)
 The ERD for the analysis is present as follows
