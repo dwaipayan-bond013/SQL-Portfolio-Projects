@@ -5,6 +5,7 @@
 
 ## 📊 Business Problem
 Merlin Bikes is a renowned manufacturer and retailer specializing in high-quality bicycles, accessories, and cycling apparel. With a diverse product range and a global customer base, the company aims to expand its market share and drive revenue growth by offering premium products that meet the needs of cycling enthusiasts.
+
 Despite growing interest in biking products, Merlin Bikes faces challenges in optimizing sales strategies and product offerings across different categories and geographic markets. Insights reveal significant disparities in product performance, customer engagement, and regional sales, highlighting the need for targeted strategies to maximize revenue potential, improve market penetration, and optimize product pricing.
 
 This project involves an in-depth analysis of Merlin's bike sales data over a span of 4 years. The goal is to uncover actionable insights around product performance, customer segmentation, regional trends, and revenue distribution to help drive better decision-making across marketing, sales, and inventory.
