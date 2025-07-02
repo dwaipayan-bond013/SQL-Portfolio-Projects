@@ -3,13 +3,12 @@
   <img src="Loan_poster.png" width="900px" height:auto>
 </p>
 
----
-
 ## 🧾 Project Overview
 
 This project involves analyzing loan data stored in a relational database using SQL. The dataset provides insights into borrower characteristics, loan performance, and financial risk indicators. The goal is to derive meaningful business intelligence to assist in credit risk assessment and loan portfolio management.
 
----
+## Business Problem
+The company faced rising default rates and inconsistent portfolio performance across different borrower profiles, time periods, and geographies. This project aimed to analyze historical loan data to identify high-risk patterns, optimize credit risk assessment, and uncover growth opportunities by evaluating repayment behavior, seasonal trends, and state-wise performance.
 
 ##  Dataset Description
 
